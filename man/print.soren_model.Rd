@@ -10,12 +10,22 @@
 
 \method{summary}{soren_model}(object, ...)
 
-\method{plot}{soren_model}(x, ...)
+\method{plot}{soren_model}(
+  x,
+  ...,
+  xlab = "SOREN 1",
+  ylab = "SOREN 2",
+  main = "Exploratory retained representation"
+)
 }
 \arguments{
 \item{x, object}{A fitted model.}
 
 \item{...}{Additional plotting arguments (unused for print and summary).}
+
+\item{xlab, ylab}{Axis labels for the plot.}
+
+\item{main}{Plot title.}
 }
 \value{
 Print returns the model invisibly; summary returns diagnostics;
