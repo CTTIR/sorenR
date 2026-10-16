@@ -56,6 +56,15 @@ Geometry stress, support coverage and anchor displacement are distinct diagnosti
 not confidence probabilities. Perturbation and refit sensitivity require separate
 experiments.
 
+`soren_neighborhood_audit(model, query, reference, k = 15L)` compares supplied
+query-to-reference neighborhoods under frozen input preprocessing and the current
+embedding. It returns per-query expected recall, aggregate counts, and boundary-tie
+diagnostics. Supply independent evaluation matrices and explicit positional
+`exclude_reference` indices when self-matches need removal. Ties use independent
+uniform boundary choices analytically: identical fully tied spaces score k/N,
+not one. This geometric audit does not establish biological validity or superiority.
+Distance work is chunked; input validation/copies and returned rows still use memory.
+
 Install a locally built source package with `R CMD INSTALL sorenR_0.0.1.tar.gz`.
 Only base/recommended R packages are runtime dependencies. Testthat is used for tests.
 No network access is required by the package, its examples or tests.

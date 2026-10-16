@@ -51,6 +51,38 @@ Support ratios are uncalibrated coverage diagnostics, not confidence probabiliti
 The output lies inside the convex hull of prototype coordinates; far-away inputs
 are not reliable extrapolations.
 
+## Audit independent neighborhoods
+
+Training stress and independent neighbor retrieval measure different properties.
+Supply query and reference matrices separately; the audit uses frozen preprocessing
+and the current map without fitting or retaining either bank. These deterministic
+synthetic observations illustrate the API, rather than a scientific validation.
+
+```{r neighborhood-audit}
+t_query <- seq(0.15, 3.85 * pi, length.out = 9)
+t_reference <- seq(0.07, 3.93 * pi, length.out = 31)
+query <- cbind(time = t_query, sine = sin(t_query), cosine = cos(t_query))
+reference <- cbind(time = t_reference, sine = sin(t_reference), cosine = cos(t_reference))
+audit <- soren_neighborhood_audit(model, query, reference, k = 5L, chunk_size = 8L)
+audit$summary
+head(audit$per_query)
+```
+
+Recall is expected overlap under independent uniform choices within exact boundary
+ties, computed without random draws. Identical fully tied neighborhoods score k/N,
+not one; boundary sizes and inclusion weights make this visible. Duplicate values
+remain separate candidates. Self-matches are removed only when explicitly indexed
+with `exclude_reference` (zero means no exclusion), never from row names or values.
+For the same matrix in both arguments, use `exclude_reference = seq_len(nrow(query))`.
+The caller must establish independence from fitting or tuning. This diagnostic is
+uncalibrated and does not establish biological validity or methodological superiority.
+
+The audit evaluates the existing map one row at a time so block size cannot change
+its reduction path; bulk transformation may differ at floating-point roundoff.
+Two reference passes bound distance workspace, with an additional k-selection
+buffer. Caller inputs, validation/coercion copies, and per-query output still use
+memory. Repeated mapping favors reproducible small CPU audits over throughput.
+
 ## Update and inspect the result
 
 An update returns a new model. The default fixed budget checks mean squared raw
