@@ -1,0 +1,17 @@
+Package: sorenR
+Title: Experimental Self-Organizing Representations with Bounded Updates
+Version: 0.0.1
+Authors@R: person("R.", "Heller", email = "58561665+r-heller@users.noreply.github.com", role = c("aut", "cre"))
+Description: A pure R experimental prototype graph representation with a
+    deterministic out-of-sample map, frozen preprocessing, bounded replay,
+    and transactional updates checked against a finite-anchor displacement
+    budget. Support scores are uncalibrated and methodological superiority
+    is not established.
+License: MIT + file LICENSE
+Encoding: UTF-8
+Depends: R (>= 4.1.0)
+Imports: stats, graphics, utils
+Suggests: testthat (>= 3.0.0), knitr, rmarkdown
+VignetteBuilder: knitr
+Config/testthat/edition: 3
+Config/roxygen2/version: 8.0.0

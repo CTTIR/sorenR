@@ -1,0 +1,87 @@
+---
+title: "Getting started with sorenR"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Getting started with sorenR}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(collapse = TRUE, comment = "#>")
+```
+
+```{r logo, echo=FALSE, out.width="180px", fig.align="center", fig.alt="sorenR hexagonal logo"}
+knitr::include_graphics(system.file("figures", "logo.png", package = "sorenR"))
+```
+
+**Self-Organizing Representations with Evolving Neighborhoods** is an experimental
+pure-R prototype graph representation. Its scientific novelty and benefit over
+existing methods are not established. This example uses only synthetic data.
+
+## Fit a representation
+
+Rows are observations and columns are numeric features. Preprocessing is learned
+from the training matrix and stays frozen for later transforms and updates.
+
+```{r fit}
+library(sorenR)
+t <- seq(0, 4 * pi, length.out = 80)
+x <- cbind(time = t, sine = sin(t), cosine = cos(t))
+control <- soren_control(max_prototypes = 16L, initial_prototypes = 8L,
+                         memory_size = 40L, seed = 42L)
+model <- soren_fit(x, n_components = 2L, control = control)
+model
+```
+
+## Transform new observations
+
+The frozen transform does not retrain the model or consume random numbers.
+Feature names and their order must match training.
+
+```{r transform}
+t_next <- seq(4 * pi, 4.5 * pi, length.out = 12)
+x_next <- cbind(time = t_next, sine = sin(t_next), cosine = cos(t_next))
+mapped <- soren_transform(model, x_next, diagnostics = TRUE)
+head(mapped$coordinates)
+head(mapped$support)
+```
+
+Support ratios are uncalibrated coverage diagnostics, not confidence probabilities.
+The output lies inside the convex hull of prototype coordinates; far-away inputs
+are not reliable extrapolations.
+
+## Update and inspect the result
+
+An update returns a new model. The default fixed budget checks mean squared raw
+coordinate displacement on the old retained anchors. Infeasible proposals can be
+shortened or rolled back; inspect the status before interpreting adaptation.
+
+```{r update}
+updated <- soren_update(model, x_next)
+checks <- soren_diagnostics(updated)
+checks$last_update
+```
+
+A finite-anchor mean budget does not constrain every observation or total movement
+across many updates. Adaptive mode uses an uncalibrated heuristic; it is not a
+statistical test of drift. Frozen and unrestricted modes are also available for
+controlled comparisons.
+
+## Retained coordinates and model files
+
+```{r retained}
+head(soren_embedding(updated, type = "prototypes"))
+checks$retained_slots
+```
+
+Replay memory contains bounded reservoir and coverage slots from training and
+accepted batches. `soren_embedding()` does not return every historical observation.
+Use `soren_transform()` for data stored separately.
+
+Save with `soren_save(updated, "model.rds")` and reload with
+`soren_load("model.rds")`. Only load trusted files. Prototypes and retained replay
+may contain sensitive derived information and are not anonymized.
+
+Dense finite matrices are supported. Sparse inputs, calibrated drift control,
+and prototype merging/pruning are not implemented in this version.
