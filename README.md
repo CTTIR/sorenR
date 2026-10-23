@@ -1,4 +1,4 @@
-# sorenR <img src="inst/figures/logo.png" align="right" width="160" alt="sorenR hexagonal logo" />
+# sorenR <picture class="cttir-readme-logo"><source class="cttir-logo-dark-source" media="(prefers-color-scheme: dark)" srcset="man/figures/logo-with-name-dark.png" /><img src="man/figures/logo-with-name.png" align="right" alt="sorenR hex logo" width="120" height="139" /></picture>
 
 Experimental **Self-Organizing Representations with Evolving Neighborhoods** in
 pure R. This is an early research implementation, not a validated new method.
@@ -71,3 +71,7 @@ No network access is required by the package, its examples or tests.
 
 Read the [getting-started vignette](vignettes/sorenR.Rmd) for a complete example.
 After installation, open it with `vignette("sorenR", package = "sorenR")`.
+
+## Branding
+
+Editable R artwork and regeneration instructions are in [tools/branding](https://github.com/CTTIR/sorenR/blob/main/tools/branding/README.md).
