@@ -1,4 +1,4 @@
-# sorenR <img src="man/figures/logo.png" align="right" width="120" height="139" alt="sorenR hex logo" />
+# sorenR <picture class="cttir-readme-logo"><source class="cttir-logo-dark-source" media="(prefers-color-scheme: dark)" srcset="man/figures/logo-with-name-dark.png" /><img src="man/figures/logo-with-name.png" align="right" alt="sorenR hex logo" width="120" height="139" /></picture>
 
 Experimental **Self-Organizing Representations with Evolving Neighborhoods** in
 pure R. This is an early research implementation, not a validated new method.
