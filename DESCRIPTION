@@ -1,7 +1,7 @@
 Package: sorenR
 Title: Experimental Self-Organizing Representations with Bounded Updates
 Version: 0.0.1
-Authors@R: person("R.", "Heller", email = "58561665+r-heller@users.noreply.github.com", role = c("aut", "cre"))
+Authors@R: person("R.", "Heller", email = "raban.heller@uni-ulm.de", role = c("aut", "cre"))
 Description: A pure R experimental prototype graph representation with a
     deterministic out-of-sample map, frozen preprocessing, bounded replay,
     and transactional updates checked against a finite-anchor displacement
