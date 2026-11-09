@@ -22,3 +22,13 @@
 \.(Rcheck|tar\.gz|tgz|zip|log|sqlite[^/]*|pem|key)($|/)
 ^LICENSE[.]md$
 ^tools/branding$
+^CRAN-SUBMISSION$
+^docs$
+^pkgdown$
+^codemeta\.json$
+^\.zenodo\.json$
+^man/figures/.*\.pdf$
+^man/figures/icon-[0-9]+\.png$
+^man/figures/logo-(light|mono|dark|symbol)\.
+^man/figures/logo-with-name-mono\.
+^man/figures/logo-with-name(-dark)?\.svg$
