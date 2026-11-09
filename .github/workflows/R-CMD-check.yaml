@@ -14,14 +14,19 @@ concurrency:
 
 jobs:
   check:
-    name: ${{ matrix.os }} / R release
-    runs-on: ${{ matrix.os }}
+    name: ${{ matrix.config.os }} / R ${{ matrix.config.r }}
+    runs-on: ${{ matrix.config.os }}
     timeout-minutes: 30
     strategy:
       fail-fast: false
-      max-parallel: 2
+      max-parallel: 3
       matrix:
-        os: [ubuntu-latest, windows-latest, macos-latest]
+        config:
+          - {os: macos-latest,   r: 'release'}
+          - {os: windows-latest, r: 'release'}
+          - {os: ubuntu-latest,  r: 'devel', http-user-agent: 'release'}
+          - {os: ubuntu-latest,  r: 'release'}
+          - {os: ubuntu-latest,  r: 'oldrel-1'}
     env:
       R_KEEP_PKG_SOURCE: "yes"
       OPENBLAS_NUM_THREADS: "1"
@@ -35,7 +40,8 @@ jobs:
       - uses: r-lib/actions/setup-pandoc@f9a764fea8d5c63df6ef9a5c7795bf7deb5d7e05 # v2
       - uses: r-lib/actions/setup-r@f9a764fea8d5c63df6ef9a5c7795bf7deb5d7e05 # v2
         with:
-          r-version: release
+          r-version: ${{ matrix.config.r }}
+          http-user-agent: ${{ matrix.config.http-user-agent }}
           use-public-rspm: true
       - uses: r-lib/actions/setup-r-dependencies@f9a764fea8d5c63df6ef9a5c7795bf7deb5d7e05 # v2
         with:
