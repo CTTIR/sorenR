@@ -36,7 +36,7 @@ soren_fit <- function(x, n_components = 2L, control = soren_control(), row_ids =
   }
   opt <- .optimize(y, graph, control)
   residual <- sqrt(apply(.dist2(z, c), 1L, min))
-  object <- structure(list(schema_version = 1L, version = "0.0.1", update_id = 0L,
+  object <- structure(list(schema_version = 1L, version = as.character(utils::packageVersion("sorenR")), update_id = 0L,
     n_components = as.integer(n_components), schema = list(p = ncol(x), names = colnames(x)),
     center = center, scale = scale, prototypes = c, coordinates = opt$y,
     prototype_ids = seq_len(nrow(c)), next_prototype_id = nrow(c) + 1L,
