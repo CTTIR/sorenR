@@ -6,6 +6,12 @@
 #' @details Prototype stress compares all pairwise standardized input distances
 #'   with raw output distances; it is not a biological ground truth or an uncertainty
 #'   probability. Input sensitivity and refit stability require separate experiments.
+#' @examples
+#' x <- cbind(a = sin(1:30), b = cos(1:30))
+#' model <- soren_fit(x, control = soren_control(iterations = 5L))
+#' d <- soren_diagnostics(model, newdata = x[1:5, , drop = FALSE])
+#' d$prototypes
+#' d$support
 #' @export
 soren_diagnostics <- function(object, newdata = NULL) {
   .validate_model(object)
@@ -27,6 +33,11 @@ soren_diagnostics <- function(object, newdata = NULL) {
 #' @param type Either replay slots or prototypes.
 #' @return A coordinate matrix with identifiers in row names. Replay IDs may occur
 #'   twice when reservoir and coverage slots retain the same observation.
+#' @examples
+#' x <- cbind(a = sin(1:30), b = cos(1:30))
+#' model <- soren_fit(x, control = soren_control(iterations = 5L))
+#' head(soren_embedding(model))
+#' soren_embedding(model, type = "prototypes")
 #' @export
 soren_embedding <- function(object, type = c("replay", "prototypes")) {
   .validate_model(object); type <- match.arg(type)

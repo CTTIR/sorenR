@@ -6,6 +6,14 @@
 #' @details Serialized models include bounded standardized replay and prototypes.
 #'   These can contain sensitive information and are not anonymized. Validation
 #'   is not a security sandbox for untrusted R serialization.
+#' @examples
+#' x <- cbind(a = sin(1:30), b = cos(1:30))
+#' model <- soren_fit(x, control = soren_control(iterations = 5L))
+#' path <- tempfile(fileext = ".rds")
+#' soren_save(model, path)
+#' restored <- soren_load(path)
+#' identical(soren_embedding(model), soren_embedding(restored))
+#' unlink(path)
 #' @export
 soren_save <- function(object, file) {
   .validate_model(object); .local_file(file)

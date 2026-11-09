@@ -23,3 +23,10 @@ Prototype stress compares all pairwise standardized input distances
   with raw output distances; it is not a biological ground truth or an uncertainty
   probability. Input sensitivity and refit stability require separate experiments.
 }
+\examples{
+x <- cbind(a = sin(1:30), b = cos(1:30))
+model <- soren_fit(x, control = soren_control(iterations = 5L))
+d <- soren_diagnostics(model, newdata = x[1:5, , drop = FALSE])
+d$prototypes
+d$support
+}

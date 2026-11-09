@@ -5,6 +5,12 @@
 #' @param main Plot title.
 #' @return Print returns the model invisibly; summary returns diagnostics;
 #'   plot returns \code{NULL} invisibly.
+#' @examples
+#' x <- cbind(a = sin(1:30), b = cos(1:30))
+#' model <- soren_fit(x, control = soren_control(iterations = 5L))
+#' model
+#' str(summary(model), max.level = 1)
+#' plot(model)
 #' @export
 print.soren_model <- function(x, ...) {
   .validate_model(x)

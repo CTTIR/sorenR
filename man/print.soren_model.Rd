@@ -34,3 +34,10 @@ Print returns the model invisibly; summary returns diagnostics;
 \description{
 Display an experimental representation
 }
+\examples{
+x <- cbind(a = sin(1:30), b = cos(1:30))
+model <- soren_fit(x, control = soren_control(iterations = 5L))
+model
+str(summary(model), max.level = 1)
+plot(model)
+}

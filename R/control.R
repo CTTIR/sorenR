@@ -19,6 +19,9 @@
 #' @param chunk_size Maximum rows per transform allocation.
 #' @param seed Local random seed; caller random state is restored.
 #' @return A validated list of class \code{soren_control}.
+#' @examples
+#' ctl <- soren_control(max_prototypes = 16L, stability_mode = "adaptive")
+#' ctl$stability_mode
 #' @export
 soren_control <- function(max_prototypes = 32L, initial_prototypes = 8L,
                           memory_size = 128L, neighbors = 3L, iterations = 30L,

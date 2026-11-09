@@ -63,3 +63,7 @@ A validated list of class \code{soren_control}.
 All budgets refer to standardized input space or raw output coordinates.
 Adaptive support scores are heuristics, not calibrated tests of drift.
 }
+\examples{
+ctl <- soren_control(max_prototypes = 16L, stability_mode = "adaptive")
+ctl$stability_mode
+}

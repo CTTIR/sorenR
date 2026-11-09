@@ -6,6 +6,12 @@
 #' @details The normalized radial basis map is deterministic and consumes no random
 #'   numbers. It lies in the convex hull of prototype coordinates. Far-field
 #'   behavior is not a reliable extrapolation. No preprocessing is refitted.
+#' @examples
+#' x <- cbind(a = sin(1:30), b = cos(1:30))
+#' model <- soren_fit(x, control = soren_control(iterations = 5L))
+#' newdata <- cbind(a = sin(31:35), b = cos(31:35))
+#' soren_transform(model, newdata)
+#' soren_transform(model, newdata, diagnostics = TRUE)$support
 #' @export
 soren_transform <- function(object, newdata, diagnostics = FALSE) {
   .validate_model(object)

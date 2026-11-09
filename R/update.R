@@ -9,6 +9,12 @@
 #'   Growth proposals that violate the budget are rolled back in full. Same-size
 #'   proposals are backtracked. A finite-anchor mean budget does not constrain
 #'   every point, held-out data, or cumulative displacement over many updates.
+#' @examples
+#' x <- cbind(a = sin(1:30), b = cos(1:30))
+#' model <- soren_fit(x, control = soren_control(iterations = 5L))
+#' batch <- cbind(a = sin(31:40), b = cos(31:40))
+#' updated <- soren_update(model, batch)
+#' soren_diagnostics(updated)$last_update$status
 #' @export
 soren_update <- function(object, newdata, row_ids = NULL) {
   start <- proc.time()[[3L]]; .validate_model(object)
