@@ -65,7 +65,8 @@ uniform boundary choices analytically: identical fully tied spaces score k/N,
 not one. This geometric audit does not establish biological validity or superiority.
 Distance work is chunked; input validation/copies and returned rows still use memory.
 
-Install a locally built source package with `R CMD INSTALL sorenR_0.0.1.tar.gz`.
+Install the development version with `remotes::install_github("CTTIR/sorenR")`,
+or a locally built source package with `R CMD INSTALL sorenR_0.1.0.tar.gz`.
 Only base/recommended R packages are runtime dependencies. Testthat is used for tests.
 No network access is required by the package, its examples or tests.
 

@@ -1,6 +1,6 @@
 Package: sorenR
 Title: Experimental Self-Organizing Representations with Bounded Updates
-Version: 0.0.1
+Version: 0.1.0
 Authors@R: person("R.", "Heller", email = "raban.heller@uni-ulm.de", role = c("aut", "cre"))
 Description: Fits experimental self-organizing representations with
     evolving neighborhoods (SOREN), a prototype codebook and mutual-neighbor
