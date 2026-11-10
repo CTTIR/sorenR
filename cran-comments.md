@@ -10,8 +10,8 @@ synthetic data and run in a few seconds.
 ## Test environments
 
 * local: macOS (aarch64), R 4.6.1, `R CMD check --as-cran --no-manual`
-  (no LaTeX installation is available locally, so the PDF manual was not
-  built there)
+  (the PDF manual was built locally with TinyTeX (TeX Live 2026) via
+  `R CMD Rd2pdf` without errors; the check run itself used `--no-manual`)
 * GitHub Actions: macos-latest (release), windows-latest (release),
   ubuntu-latest (devel, release, oldrel-1), with `--as-cran`
 
