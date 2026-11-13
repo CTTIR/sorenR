@@ -1,77 +1,120 @@
 # sorenR <picture class="cttir-readme-logo"><source class="cttir-logo-dark-source" media="(prefers-color-scheme: dark)" srcset="man/figures/logo-with-name-dark.png" /><img src="man/figures/logo-with-name.png" align="right" alt="sorenR logo" width="120" height="139" /></picture>
 
-Experimental **Self-Organizing Representations with Evolving Neighborhoods** in
-pure R. This is an early research implementation, not a validated new method.
-Novelty, benefit over existing methods and suitability for scientific inference
-remain unestablished.
+**Self-Organizing Representations with Evolving Neighborhoods**: a low-dimensional
+reference map that can keep taking new data without its existing coordinates
+drifting. The package is experimental and has only been tried on synthetic data.
 
 ```r
 library(sorenR)
-x <- cbind(time = seq_len(80) / 10, wave = sin(seq_len(80) / 5))
-model <- soren_fit(x, control = soren_control())
-z <- soren_transform(model, x[1:10, , drop = FALSE])
-updated <- soren_update(model, x + 0.1)
-soren_diagnostics(updated)
+model   <- soren_fit(x)                      # x: dense numeric matrix
+y       <- soren_transform(model, x)
+updated <- soren_update(model, new_batch)
+soren_diagnostics(updated)$certificate
+soren_transform(updated, x, reference = "origin")   # identical to y
 ```
 
-The package fits a bounded prototype codebook and mutual-neighbor graph, then
-optimizes a smoothed attraction/repulsion objective. The out-of-sample map uses
-all-prototype radial-basis interpolation. Training means and scales remain frozen.
-Named feature columns must match exactly, including their order.
+## What an update guarantees
 
-Updates check mean squared **raw coordinate displacement on old retained anchors**
-after prototype, bandwidth and layout changes. Same-size proposals can be shortened;
-infeasible growth proposals are rolled back. Inspect `last_update` in diagnostics:
-`accepted`, `rollback` and `frozen` have different meanings. This bound does not
-control every point, unseen observations or cumulative displacement across updates.
+The map is a weighted average over prototypes,
+`f(x) = sum_j w_j(x) * (y_j + A_j (x - c_j))`, with normalized radial-basis
+weights `w_j`. An update
 
-`stability_mode` offers `fixed` (default), `adaptive`, `frozen` and `unrestricted`.
-The adaptive mode uses an **uncalibrated support heuristic**, not a statistical
-change test or evidence of a biological cause. Fixed and adaptive budgets are in
-squared output-coordinate units. No alignment or rescaling conceals displacement.
+* never changes an existing prototype `c_j`, its bandwidth or its local linear
+  map `A_j`;
+* appends prototypes only where new observations fall outside calibrated
+  support (see below);
+* keeps every existing layout coordinate `y_j` within a lifetime radius of the
+  coordinate it had when it was created. The radius is `stability_radius`
+  (default 0.05) times the root mean square radius of the fitted layout.
 
-Memory combines a random reservoir of initial training and **accepted-batch** rows
-with coverage slots. Rejected and frozen batches do not enter memory. Coverage is
-biased, and an observation can occupy both kinds of slot. The combined matrix is
-cached, so physical stored row slots are at most twice `memory_size`. Prototypes
-and memory can contain sensitive derived information; they are not anonymized.
+It follows that an observation with share `w` of its weight on prototypes added
+since the fit lies at most `(1 - w) * origin_shift_max` from its originally
+fitted position, plus `w` times the distance between the new part of the map and
+that position. The bound holds for every point, including points the model has
+never seen, and it is a lifetime bound, not a per-update one.
+`soren_diagnostics()` reports `origin_shift_max`, the radius and whether it
+holds; `soren_transform(diagnostics = TRUE)` reports `w` and the actual
+displacement per observation.
 
-Dense finite numeric matrices are supported. Sparse matrices and data frames are
-rejected explicitly. State is bounded in stream length, with dense graph storage
-quadratic in prototype count. This implementation is intended for small CPU studies;
-there is no million-point performance claim. Transform is chunked and preserves
-caller random state. Empty transform batches are supported.
+Two consequences:
 
-The map lies inside the convex hull of prototype coordinates, so it cannot reliably
-extrapolate beyond training support. Graph weights can numerically underflow to zero;
-these pairs are treated as nonedges. Disconnected components need not have a finite
-loss minimizer. The finite optimization budget does not imply convergence. Growth
-requires repeated batch-level support evidence; merging/pruning and calibrated drift
-control are not implemented in this version.
+* A batch with no flagged structure leaves the map exactly as it was.
+* `soren_transform(reference = "origin")` evaluates the originally fitted map
+  from any later model version, so published coordinates stay reproducible.
 
-`soren_embedding()` returns retained replay slots or prototype coordinates, not
-all historical observations. `soren_save()`/`soren_load()` support trusted local RDS
-files with schema validation. Use `soren_transform()` for observations held externally.
-Geometry stress, support coverage and anchor displacement are distinct diagnostics,
-not confidence probabilities. Perturbation and refit sensitivity require separate
-experiments.
+What the guarantee does not cover: observations that sit on newly added
+prototypes (`w` close to one) are by construction mapped somewhere new, and the
+bound says nothing about how well the map represents the data.
 
-`soren_neighborhood_audit(model, query, reference, k = 15L)` compares supplied
-query-to-reference neighborhoods under frozen input preprocessing and the current
-embedding. It returns per-query expected recall, aggregate counts, and boundary-tie
-diagnostics. Supply independent evaluation matrices and explicit positional
-`exclude_reference` indices when self-matches need removal. Ties use independent
-uniform boundary choices analytically: identical fully tied spaces score k/N,
-not one. This geometric audit does not establish biological validity or superiority.
-Distance work is chunked; input validation/copies and returned rows still use memory.
+## Calibrated novelty and growth
 
-Install the development version with `remotes::install_github("CTTIR/sorenR")`,
-or a locally built source package with `R CMD INSTALL sorenR_0.1.0.tar.gz`.
-Only base/recommended R packages are runtime dependencies. Testthat is used for tests.
-No network access is required by the package, its examples or tests.
+At fit, up to a fifth of the rows (at most `calibration_size`) are held out and
+never used to place prototypes. A new observation's distance to its nearest
+prototype, in bandwidth units, is turned into a conformal p-value against those
+held-out scores. Observations at or below `novelty_alpha` are flagged. Where at
+least `growth_min_support` flagged observations lie close together, a prototype
+is appended at their mean; it is narrowed or dropped until new prototypes take
+at most `growth_intrusion` of the map weight on every calibration observation
+and every replay observation the present model does not flag.
+
+P-values are valid on average for observations exchangeable with the
+calibration rows. A batch effect or measurement shift breaks that assumption
+and will be flagged as novel. With fewer than twenty held-out rows nothing is
+flagged; `soren_diagnostics()$calibration` reports the level actually in use.
+Flags are per observation and are not corrected for multiplicity; the support
+requirement is a heuristic safeguard, not a formal error rate for growth.
+
+## Fitting
+
+Columns are centered and scaled once and that preprocessing is frozen.
+Prototypes are chosen by farthest-point sampling and refined; they are joined
+into a nearest-neighbor graph and laid out by stress majorization on graph
+path lengths (`geodesic = TRUE`) or Euclidean distances. Each prototype gets
+its own bandwidth and, with `local_linear = TRUE`, a frozen local linear map.
+
+Check the result on your own data: `soren_neighborhood_audit(model, query,
+reference, k)` compares query-to-reference neighborhoods in the standardized
+input and in the embedding, with exact handling of ties.
+
+## Limits
+
+* Dense finite numeric matrices only; sparse matrices and data frames are
+  rejected. Named feature columns must match training exactly, in order.
+* Prototype storage and layout are quadratic in the number of prototypes, and
+  graph path lengths are cubic. The package has been run with up to 512
+  prototypes and is meant for a few hundred.
+* Prototypes are never merged or removed, and existing prototypes do not track
+  slow change inside their support.
+* Far from all prototypes the local linear maps extrapolate linearly and
+  should not be trusted; such observations are flagged as novel.
+* The model stores prototypes, held-out calibration rows and replay rows in
+  standardized form. They can contain sensitive information and are not
+  anonymized. `soren_load()` is for trusted local files only.
+* `soren_embedding()` returns retained replay slots or prototypes, not every
+  historical observation.
+
+## Related work
+
+The map form is not new: normalized radial-basis out-of-sample maps appear in
+kernel t-SNE (Gisbrecht, Schulz and Hammer 2015,
+[doi:10.1016/j.neucom.2013.11.045](https://doi.org/10.1016/j.neucom.2013.11.045)),
+control points with local affine maps in LAMP (Joia et al. 2011,
+[doi:10.1109/tvcg.2011.220](https://doi.org/10.1109/tvcg.2011.220)), and
+landmark layouts on path lengths in landmark Isomap (de Silva and Tenenbaum
+2002). Stress majorization follows de Leeuw and Mair (2009,
+[doi:10.18637/jss.v031.i03](https://doi.org/10.18637/jss.v031.i03)) and conformal
+p-values for outlier testing follow Bates et al. (2023,
+[doi:10.1214/22-aos2244](https://doi.org/10.1214/22-aos2244)). What this package
+adds is the update protocol and its displacement bound. No comparison with
+other methods on real data has been published.
+
+## Installation
+
+Install the development version with `remotes::install_github("CTTIR/sorenR")`.
+Only base and recommended R packages are needed at run time; no network access
+is required by the package, its examples or its tests.
 
 Read the [getting-started vignette](vignettes/sorenR.Rmd) for a complete example.
-After installation, open it with `vignette("sorenR", package = "sorenR")`.
 
 ## Branding
 

@@ -2,22 +2,23 @@
 % Please edit documentation in R/control.R
 \name{soren_control}
 \alias{soren_control}
-\title{Configure an experimental SOREN model}
+\title{Configure a SOREN reference map}
 \usage{
 soren_control(
-  max_prototypes = 32L,
-  initial_prototypes = 8L,
-  memory_size = 128L,
-  neighbors = 3L,
-  iterations = 30L,
-  learning_rate = 0.2,
+  max_prototypes = 256L,
+  initial_prototypes = 64L,
+  memory_size = 256L,
+  neighbors = 5L,
+  iterations = 300L,
   stability_mode = "fixed",
-  stability_budget = 0.01,
+  stability_radius = 0.05,
   tolerance = 1e-10,
-  repulsion = 0.1,
-  clip = 3,
-  growth_threshold = 2,
+  novelty_alpha = 0.01,
   growth_min_support = 3L,
+  growth_intrusion = 0.05,
+  calibration_size = 256L,
+  local_linear = TRUE,
+  geodesic = TRUE,
   history_size = 32L,
   chunk_size = 1024L,
   seed = 42L
@@ -26,31 +27,43 @@ soren_control(
 \arguments{
 \item{max_prototypes}{Maximum codebook size (at least two).}
 
-\item{initial_prototypes}{Initial codebook size, at most the maximum.}
+\item{initial_prototypes}{Codebook size requested at fit, at most the maximum.
+Fewer are used when the training part has fewer distinct observations.}
 
-\item{memory_size}{Maximum retained observations (at least two).}
+\item{memory_size}{Maximum retained replay observations (at least two).}
 
-\item{neighbors}{Maximum mutual nearest neighbors per prototype.}
+\item{neighbors}{Nearest neighbors per prototype in the prototype graph.}
 
-\item{iterations}{Maximum layout descent iterations per fit or update.}
+\item{iterations}{Maximum stress majorization iterations per fit or update.}
 
-\item{learning_rate}{Prototype step in (0,1].}
+\item{stability_mode}{One of \code{"fixed"}, \code{"frozen"} or
+\code{"unrestricted"}. See Details.}
 
-\item{stability_mode}{One of fixed, adaptive, frozen, unrestricted.}
-
-\item{stability_budget}{Mean squared displacement budget on old replay anchors.}
+\item{stability_radius}{Lifetime radius, as a fraction of the root mean square
+radius of the fitted layout, within which each prototype coordinate must
+stay around the coordinate it had when it was created.}
 
 \item{tolerance}{Absolute numerical feasibility tolerance.}
 
-\item{repulsion}{Nonedge loss multiplier, nonnegative.}
+\item{novelty_alpha}{Conformal p-value threshold below which an observation
+is flagged as outside calibrated support.}
 
-\item{clip}{Maximum individual standardized residual norm.}
+\item{growth_min_support}{Minimum number of mutually close flagged
+observations needed to propose a new prototype.}
 
-\item{growth_threshold}{Growth residual threshold in bandwidth units.}
+\item{growth_intrusion}{Largest share of map weight that newly added
+prototypes may take on calibration observations and unflagged replay
+observations.}
 
-\item{growth_min_support}{Minimum observations supporting a growth proposal.}
+\item{calibration_size}{Maximum number of training rows held out to
+calibrate novelty scores; zero disables calibration and growth.}
 
-\item{history_size}{Maximum retained update diagnostic records.}
+\item{local_linear}{Use frozen local linear maps around prototypes?}
+
+\item{geodesic}{Lay prototypes out by graph shortest-path distances
+(\code{TRUE}) or by Euclidean distances (\code{FALSE})?}
+
+\item{history_size}{Maximum retained update records.}
 
 \item{chunk_size}{Maximum rows per transform allocation.}
 
@@ -60,10 +73,15 @@ soren_control(
 A validated list of class \code{soren_control}.
 }
 \description{
-All budgets refer to standardized input space or raw output coordinates.
-Adaptive support scores are heuristics, not calibrated tests of drift.
+Configure a SOREN reference map
+}
+\details{
+In \code{"fixed"} mode an update never moves existing prototypes in
+  input space and keeps every existing layout coordinate within the lifetime
+  radius of its creation coordinate. \code{"frozen"} only scores new
+  observations. \code{"unrestricted"} removes the radius, for comparison.
 }
 \examples{
-ctl <- soren_control(max_prototypes = 16L, stability_mode = "adaptive")
+ctl <- soren_control(max_prototypes = 16L, initial_prototypes = 8L)
 ctl$stability_mode
 }

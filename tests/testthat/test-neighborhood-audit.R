@@ -1,7 +1,7 @@
 audit_fixture <- function() {
   x <- cbind(a = sin(1:20), b = cos(1:20), c = (1:20) / 10)
   soren_fit(x, control = soren_control(max_prototypes = 4L, initial_prototypes = 4L,
-    memory_size = 8L, iterations = 2L))
+    memory_size = 8L, iterations = 2L, local_linear = FALSE))
 }
 
 # Independent finite enumeration, not the production fractional-count formula.

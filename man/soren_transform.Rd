@@ -2,9 +2,14 @@
 % Please edit documentation in R/transform.R
 \name{soren_transform}
 \alias{soren_transform}
-\title{Map observations with a frozen representation}
+\title{Map observations with a fitted reference map}
 \usage{
-soren_transform(object, newdata, diagnostics = FALSE)
+soren_transform(
+  object,
+  newdata,
+  diagnostics = FALSE,
+  reference = c("current", "origin")
+)
 }
 \arguments{
 \item{object}{A fitted \code{soren_model}.}
@@ -12,22 +17,39 @@ soren_transform(object, newdata, diagnostics = FALSE)
 \item{newdata}{Dense numeric matrix with the exact training column schema.}
 
 \item{diagnostics}{Return support diagnostics alongside coordinates?}
+
+\item{reference}{\code{"current"} for the present map, or \code{"origin"} for
+the map as it was originally fitted.}
 }
 \value{
-A coordinate matrix, or a list with coordinates and support diagnostics.
+A coordinate matrix, or a list with coordinates and a data frame of
+  support diagnostics.
 }
 \description{
-Map observations with a frozen representation
+Map observations with a fitted reference map
 }
 \details{
-The normalized radial basis map is deterministic and consumes no random
-  numbers. It lies in the convex hull of prototype coordinates. Far-field
-  behavior is not a reliable extrapolation. No preprocessing is refitted.
+The map is deterministic and consumes no random numbers; no
+  preprocessing is refitted. An updated model still contains everything
+  needed to evaluate the originally fitted map, so \code{reference = "origin"}
+  returns the coordinates the first model version would have returned.
+
+  Diagnostics hold, per observation: \code{score} (distance to the nearest
+  prototype in bandwidth units), the conformal \code{p_value} of that score
+  against the held-out calibration scores, \code{novel} (p-value at or below
+  the calibration level), \code{new_weight} (share of map weight on prototypes
+  added after the fit) and \code{origin_displacement} (distance between the
+  current and the original coordinates). For every observation
+  \code{origin_displacement} is at most
+  \code{(1 - new_weight) * origin_shift_max} plus \code{new_weight} times the
+  distance between the new-prototype part of the map and the original map.
+  P-values are valid on average for observations exchangeable with the
+  calibration rows; they are not posterior probabilities.
 }
 \examples{
-x <- cbind(a = sin(1:30), b = cos(1:30))
+x <- cbind(a = sin(1:60), b = cos(1:60))
 model <- soren_fit(x, control = soren_control(iterations = 5L))
-newdata <- cbind(a = sin(31:35), b = cos(31:35))
+newdata <- cbind(a = sin(61:65), b = cos(61:65))
 soren_transform(model, newdata)
 soren_transform(model, newdata, diagnostics = TRUE)$support
 }

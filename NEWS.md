@@ -1,3 +1,29 @@
+# sorenR 0.2.0
+
+This version replaces the update mechanism and the layout. Models saved with
+0.1.0 cannot be loaded.
+
+* Updates no longer move existing prototypes. New prototypes are appended only
+  where observations fall outside conformally calibrated support, and layout
+  coordinates stay within a lifetime radius (`stability_radius`) of their
+  creation coordinates. `soren_diagnostics()$certificate` reports the bound.
+* `soren_transform(reference = "origin")` evaluates the originally fitted map
+  from any later model version.
+* Support diagnostics now hold a conformal p-value, a novelty flag, the share
+  of weight on added prototypes and the displacement from the original map.
+* The layout is stress majorization on prototype graph path lengths or
+  Euclidean distances, replacing the attraction and repulsion objective.
+* The map uses one bandwidth per prototype and optional frozen local linear
+  maps (`local_linear`).
+* `soren_control()` changed: `stability_budget`, `learning_rate`, `repulsion`,
+  `clip` and `growth_threshold` were removed, as was the `"adaptive"` mode;
+  `stability_radius`, `novelty_alpha`, `growth_intrusion`, `calibration_size`,
+  `local_linear` and `geodesic` were added. Defaults now use 64 prototypes.
+* Update records use the statuses `accepted`, `unchanged`, `frozen` and
+  `rollback`.
+* Distances and mapping are vectorized; the neighborhood audit maps in blocks.
+* Validation errors name the part of the model that failed.
+
 # sorenR 0.1.0
 
 * Prepare the package for CRAN: full-sentence description, `URL`,

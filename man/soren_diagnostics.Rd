@@ -2,7 +2,7 @@
 % Please edit documentation in R/diagnostics.R
 \name{soren_diagnostics}
 \alias{soren_diagnostics}
-\title{Inspect a fitted representation}
+\title{Inspect a reference map and its update certificate}
 \usage{
 soren_diagnostics(object, newdata = NULL)
 }
@@ -12,21 +12,36 @@ soren_diagnostics(object, newdata = NULL)
 \item{newdata}{Optional observations for support diagnostics.}
 }
 \value{
-A list of graph counts, retained memory, raw finite-anchor displacement,
-  support information and prototype distance distortion. Scores are uncalibrated.
+A list with prototype and memory counts, layout stress, the
+  \code{certificate}, the \code{calibration} state, the last update record
+  and, if \code{newdata} is given, per-observation support diagnostics.
 }
 \description{
-Inspect a fitted representation
+Inspect a reference map and its update certificate
 }
 \details{
-Prototype stress compares all pairwise standardized input distances
-  with raw output distances; it is not a biological ground truth or an uncertainty
-  probability. Input sensitivity and refit stability require separate experiments.
+\code{certificate} reports the lifetime \code{radius}, the largest
+  distance of any prototype coordinate from its creation coordinate
+  (\code{origin_shift_max}) and whether the radius \code{holds}. While it
+  holds, an observation with share \code{w} of its map weight on prototypes
+  added since the fit is at most \code{(1 - w) * origin_shift_max} away from
+  its originally fitted coordinates, plus \code{w} times the distance
+  between the new part of the map and that original position. The bound
+  covers observations the model has never seen. It says nothing about
+  whether the map represents the data well.
+
+  \code{calibration$level} is the p-value threshold actually used to flag
+  observations: \code{novelty_alpha}, or the smallest attainable p-value
+  when fewer held-out rows exist than that needs. With fewer than twenty
+  held-out rows the level is zero, nothing is flagged and
+  \code{calibrated} is \code{FALSE}. Stress is the mean
+  squared relative error of prototype layout distances against their
+  targets; it is not an uncertainty probability.
 }
 \examples{
-x <- cbind(a = sin(1:30), b = cos(1:30))
+x <- cbind(a = sin(1:60), b = cos(1:60))
 model <- soren_fit(x, control = soren_control(iterations = 5L))
 d <- soren_diagnostics(model, newdata = x[1:5, , drop = FALSE])
-d$prototypes
+d$certificate
 d$support
 }
