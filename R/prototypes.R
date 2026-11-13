@@ -15,7 +15,7 @@
   for (j in seq_len(nrow(c))) {
     z <- x[assignment == j, , drop = FALSE]
     if (nrow(z)) {
-      r <- sweep(z, 2L, c[j, ], "-")
+      r <- z - rep(c[j, ], each = nrow(z))
       lengths <- sqrt(rowSums(r^2))
       r <- r * pmin(1, clip / pmax(lengths, .Machine$double.eps))
       c[j, ] <- c[j, ] + rate * colMeans(r)
@@ -24,9 +24,13 @@
   c
 }
 
-.bandwidth <- function(c) {
-  if (nrow(c) < 2L) return(1)
+# One bandwidth per prototype: the distance to its second nearest prototype.
+.bandwidths <- function(c, rank = 2L) {
+  m <- nrow(c)
+  if (m < 2L) return(rep(1, m))
   d <- .dist2(c, c); diag(d) <- Inf
-  nearest <- sqrt(apply(d, 1L, min)); nearest <- nearest[nearest > 0 & is.finite(nearest)]
-  if (!length(nearest)) 1 else max(stats::median(nearest), 1e-6)
+  h <- sqrt(apply(d, 1L, function(r) sort(r)[min(rank, m - 1L)]))
+  ok <- is.finite(h) & h > 0
+  h[!ok] <- if (any(ok)) stats::median(h[ok]) else 1
+  pmax(h, 1e-6)
 }

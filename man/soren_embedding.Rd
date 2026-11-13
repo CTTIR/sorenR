@@ -19,8 +19,8 @@ A coordinate matrix with identifiers in row names. Replay IDs may occur
 Retrieve the coordinates of retained items
 }
 \examples{
-x <- cbind(a = sin(1:30), b = cos(1:30))
+x <- cbind(a = sin(1:60), b = cos(1:60))
 model <- soren_fit(x, control = soren_control(iterations = 5L))
 head(soren_embedding(model))
-soren_embedding(model, type = "prototypes")
+head(soren_embedding(model, type = "prototypes"))
 }

@@ -70,17 +70,15 @@ The reference metric is squared Euclidean distance after the fitted,
   For a self-audit, supply \code{exclude_reference = seq_len(nrow(query))}
   when reference and query contain the same rows in the same order.
 
-  Mapping uses the existing map one row at a time in a fixed prototype order,
-  so audit block size does not change its reduction path. Bulk transformation
-  can differ at floating-point roundoff. Direct coordinate differences avoid
-  squared-norm cancellation; intermediate nonfinite values cause an error.
-  Caller inputs, model, and random state are preserved.
+  Every mapped coordinate is a fixed-order sum over features and prototypes,
+  so the audit block size does not change the result. Direct coordinate
+  differences avoid squared-norm cancellation; intermediate nonfinite values
+  cause an error. Caller inputs, model, and random state are preserved.
 
   Two reference passes per query block bound distance and top-k workspace by
   order B squared plus B times k, where B is \code{chunk_size}. Preprocessed
   and mapped blocks require order B times (p+d), for p features and d components;
-  one-row mapping additionally uses order m plus p plus d, for m
-  prototypes. The existing model, caller inputs, validation/coercion copies,
+  mapping additionally uses order B times m, for m prototypes. The existing model, caller inputs, validation/coercion copies,
   R runtime, and order n-query output are additional allocations. In particular,
   integer inputs may require full double copies. No complete transformed
   reference bank is retained. This trades repeated mapping for bounded distance

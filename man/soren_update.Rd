@@ -2,7 +2,7 @@
 % Please edit documentation in R/update.R
 \name{soren_update}
 \alias{soren_update}
-\title{Transactionally update a representation}
+\title{Transactionally update a reference map}
 \usage{
 soren_update(object, newdata, row_ids = NULL)
 }
@@ -15,22 +15,41 @@ soren_update(object, newdata, row_ids = NULL)
 currently retained identifiers. Unretained historical IDs cannot be checked.}
 }
 \value{
-A new model. Inspect the last history record for accepted, rollback or
-  frozen status, actual displacement and budget.
+A new model. The last history record has status \code{"accepted"}
+  (prototypes were added), \code{"unchanged"} (the map is identical),
+  \code{"frozen"} or \code{"rollback"}.
 }
 \description{
-Transactionally update a representation
+Transactionally update a reference map
 }
 \details{
-Feasibility is checked on old retained anchors after every proposal.
-  Growth proposals that violate the budget are rolled back in full. Same-size
-  proposals are backtracked. A finite-anchor mean budget does not constrain
-  every point, held-out data, or cumulative displacement over many updates.
+Existing prototypes, bandwidths and local linear maps are never
+  changed. Observations whose conformal p-value is at or below the
+  calibration level reported by \code{soren_diagnostics()} are flagged; where at least \code{growth_min_support}
+  flagged observations lie close together a prototype is appended at their
+  mean. A proposed prototype is narrowed, and dropped if necessary, until
+  the prototypes added by this update take at most \code{growth_intrusion} of the map weight on
+  every calibration observation and every replay observation that the
+  present model does not flag. Appended prototypes are then laid out against
+  their path lengths to all others, with distances between existing
+  prototypes held at their published layout values and each existing
+  coordinate confined to the lifetime radius around its creation
+  coordinate.
+
+  Because the map is a weighted average over prototypes, this bounds the
+  movement of every observation, seen or not: with \code{w} its weight on
+  prototypes added since the fit, it moves by at most \code{(1 - w)} times
+  the largest coordinate shift of an original prototype, plus \code{w} times
+  the distance between the new part of the map and its original position.
+  A batch without flagged structure leaves the map exactly as it was.
+  The candidate is verified before it is returned and rolled back in full
+  if any check fails. Batches enter replay memory unless the status is
+  frozen or rollback.
 }
 \examples{
-x <- cbind(a = sin(1:30), b = cos(1:30))
+x <- cbind(a = sin(1:60), b = cos(1:60))
 model <- soren_fit(x, control = soren_control(iterations = 5L))
-batch <- cbind(a = sin(31:40), b = cos(31:40))
+batch <- cbind(a = sin(61:70), b = cos(61:70))
 updated <- soren_update(model, batch)
 soren_diagnostics(updated)$last_update$status
 }

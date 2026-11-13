@@ -2,7 +2,7 @@
 % Please edit documentation in R/fit.R
 \name{soren_fit}
 \alias{soren_fit}
-\title{Fit an experimental prototype graph representation}
+\title{Fit a SOREN reference map}
 \usage{
 soren_fit(x, n_components = 2L, control = soren_control(), row_ids = NULL)
 }
@@ -16,14 +16,20 @@ soren_fit(x, n_components = 2L, control = soren_control(), row_ids = NULL)
 \item{row_ids}{Optional unique character observation identifiers.}
 }
 \value{
-A \code{soren_model} with prototypes and bounded standardized replay.
+A \code{soren_model}.
 }
 \description{
-Fit an experimental prototype graph representation
+Fit a SOREN reference map
 }
 \details{
-Preprocessing is learned only here and frozen for future observations.
-  The method is experimental; improved retention or adaptation is not established.
+Columns are centered and scaled once and the preprocessing is frozen.
+  Up to a fifth of the rows (at most \code{calibration_size}) are held out to
+  calibrate novelty scores and are not used to place prototypes. Prototypes
+  are laid out by stress majorization on graph path lengths or Euclidean
+  distances. The out-of-sample map is a normalized radial-basis average of
+  prototype coordinates, optionally with frozen local linear maps.
+  Whether the map preserves the structure of a particular data set has to be
+  checked, for example with \code{soren_neighborhood_audit()}.
 }
 \examples{
 x <- cbind(seq_len(30), sin(seq_len(30)))
