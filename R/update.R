@@ -29,7 +29,11 @@
 #'   if any check fails. Batches enter replay memory unless the status is
 #'   frozen or rollback. Because growth uses calibration rows to constrain the
 #'   proposed score function, subsequent support p-values are adaptive ranks,
-#'   without the initial split-conformal validity guarantee.
+#'   without the initial split-conformal validity guarantee. Cumulative counters
+#'   support exact integers through `2^52`; an update that would exceed that
+#'   limit is refused before changing retained state or consuming random draws.
+#'   Newly generated row IDs beyond the 32-bit integer range use exact decimal
+#'   digits, avoiding rounded scientific notation that can merge distinct IDs.
 #' @examples
 #' x <- cbind(a = sin(1:60), b = cos(1:60))
 #' model <- soren_fit(x, control = soren_control(iterations = 5L))
@@ -40,6 +44,8 @@
 soren_update <- function(object, newdata, row_ids = NULL) {
   start <- proc.time()[[3L]]; .validate_model(object)
   x <- .input(newdata, object$schema)
+  next_seen <- .advance_counter(object$n_seen, nrow(x), "n_seen")
+  next_update <- .advance_counter(object$update_id, 1L, "update_id")
   ids <- .ids(row_ids, nrow(x), object$n_seen)
   if (any(ids %in% object$memory$ids)) stop("row_ids overlap retained observations; supply distinct explicit row_ids.")
   z <- .preprocess(x, object$center, object$scale); rownames(z) <- NULL
@@ -53,11 +59,14 @@ soren_update <- function(object, newdata, row_ids = NULL) {
   else if (length(flagged)) grown <- .grow(object, z[flagged, , drop = FALSE])
   k <- nrow(grown$centers)
   if (k) {
+    next_prototype <- .advance_counter(object$next_prototype_id, k, "next_prototype_id")
     candidate$prototypes <- rbind(object$prototypes, grown$centers)
     candidate$bandwidth <- c(object$bandwidth, grown$h)
-    candidate$birth <- c(object$birth, rep(object$update_id + 1L, k))
-    candidate$prototype_ids <- c(object$prototype_ids, object$next_prototype_id + seq_len(k) - 1L)
-    candidate$next_prototype_id <- object$next_prototype_id + k
+    candidate$birth <- c(object$birth, rep(next_update, k))
+    id_base <- if (is.integer(next_prototype)) object$next_prototype_id else
+      as.double(object$next_prototype_id)
+    candidate$prototype_ids <- c(object$prototype_ids, id_base + seq_len(k) - 1L)
+    candidate$next_prototype_id <- next_prototype
     candidate$graph <- .graph(candidate$prototypes, ctl$neighbors)
     target <- .target(candidate$prototypes, candidate$graph, ctl$geodesic)
     old <- seq_len(m)
@@ -84,8 +93,8 @@ soren_update <- function(object, newdata, row_ids = NULL) {
     local_seed <- as.integer((as.double(ctl$seed) + object$update_id + 1) %% .Machine$integer.max)
     candidate$memory <- .memory(object$memory, z, ids, ctl$memory_size, local_seed)
   }
-  candidate$n_seen <- object$n_seen + nrow(x)
-  candidate$update_id <- object$update_id + 1L
+  candidate$n_seen <- next_seen
+  candidate$update_id <- next_update
   record <- list(update_id = candidate$update_id, status = status, batch_size = nrow(x),
     flagged = length(flagged), growth = k, growth_rejected = grown$rejected, radius = radius,
     layout_shift_max = check$layout_shift_max, origin_shift_max = check$origin_shift_max,

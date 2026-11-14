@@ -12,8 +12,30 @@
   x
 }
 
+# Keep ordinary integer state and identifier formatting unchanged, promoting
+# only when its supported cumulative count exceeds the 32-bit integer range.
+.advance_counter <- function(value, increment, name) {
+  next_value <- as.double(value) + as.double(increment)
+  if (!is.finite(next_value) || next_value > 2^52) {
+    stop(name, " would exceed the supported exact counter limit (2^52).", call. = FALSE)
+  }
+  if (is.integer(value) && next_value <= .Machine$integer.max) {
+    as.integer(next_value)
+  } else next_value
+}
+
 .ids <- function(ids, n, start = 0) {
-  if (is.null(ids)) return(paste0("row-", start + seq_len(n)))
+  if (is.null(ids)) {
+    .advance_counter(start, n, "generated row identifiers")
+    base <- if (is.integer(start) && as.double(start) + n > .Machine$integer.max) {
+      as.double(start)
+    } else start
+    positions <- base + seq_len(n)
+    labels <- as.character(positions)
+    wide <- positions > .Machine$integer.max
+    labels[wide] <- sprintf("%.0f", positions[wide])
+    return(paste0("row-", labels))
+  }
   if (!is.character(ids) || length(ids) != n || anyNA(ids) || any(!nzchar(ids)) || anyDuplicated(ids))
     stop("row_ids must be unique nonempty character values, one per observation.")
   ids

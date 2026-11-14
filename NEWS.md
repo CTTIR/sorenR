@@ -1,5 +1,7 @@
 # sorenR 0.2.0
 
+* Preserve exact cumulative counts and generated row identities beyond the 32-bit integer range. Updates that exceed the supported 2^52 counter limit fail before retained state or random draws change.
+
 * Fit centering and scaling only on training rows after the seeded calibration split, preventing held-out values from altering the initial score function. Existing serialized predictions remain unchanged. Clarify that adaptive growth reuses calibration data and subsequent support ranks do not retain the initial split-conformal guarantee.
 
 This version replaces the update mechanism and the layout. Models saved with
