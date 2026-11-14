@@ -34,7 +34,9 @@ Inspect a reference map and its update certificate
   observations: \code{novelty_alpha}, or the smallest attainable p-value
   when fewer held-out rows exist than that needs. With fewer than twenty
   held-out rows the level is zero, nothing is flagged and
-  \code{calibrated} is \code{FALSE}. Stress is the mean
+  \code{calibrated} is \code{FALSE}. This flag reports whether the sample-size
+  threshold enables novelty flags; it does not certify statistical validity
+  after adaptive growth or for legacy fits. Stress is the mean
   squared relative error of prototype layout distances against their
   targets; it is not an uncertainty probability.
 }

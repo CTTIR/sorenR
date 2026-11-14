@@ -27,7 +27,9 @@
 #'   A batch without flagged structure leaves the map exactly as it was.
 #'   The candidate is verified before it is returned and rolled back in full
 #'   if any check fails. Batches enter replay memory unless the status is
-#'   frozen or rollback.
+#'   frozen or rollback. Because growth uses calibration rows to constrain the
+#'   proposed score function, subsequent support p-values are adaptive ranks,
+#'   without the initial split-conformal validity guarantee.
 #' @examples
 #' x <- cbind(a = sin(1:60), b = cos(1:60))
 #' model <- soren_fit(x, control = soren_control(iterations = 5L))

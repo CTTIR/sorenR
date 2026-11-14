@@ -49,7 +49,7 @@ bound says nothing about how well the map represents the data.
 ## Calibrated novelty and growth
 
 At fit, up to a fifth of the rows (at most `calibration_size`) are held out and
-never used to place prototypes. A new observation's distance to its nearest
+excluded from both preprocessing and prototype fitting. A new observation's distance to its nearest
 prototype, in bandwidth units, is turned into a conformal p-value against those
 held-out scores. Observations at or below `novelty_alpha` are flagged. Where at
 least `growth_min_support` flagged observations lie close together, a prototype
@@ -57,16 +57,21 @@ is appended at their mean; it is narrowed or dropped until new prototypes take
 at most `growth_intrusion` of the map weight on every calibration observation
 and every replay observation the present model does not flag.
 
-P-values are valid on average for observations exchangeable with the
-calibration rows. A batch effect or measurement shift breaks that assumption
-and will be flagged as novel. With fewer than twenty held-out rows nothing is
+For a newly fitted initial map, the score function is independent of calibration
+rows, so split-conformal p-values are marginally valid for exchangeable new
+observations, conditional on the training fit. Growth reuses calibration rows
+when accepting prototypes and recalculating scores; updated values are adaptive
+support ranks without that validity guarantee. A batch effect or measurement
+shift can be flagged as novel and is not distinguished from new structure. With fewer than twenty held-out rows nothing is
 flagged; `soren_diagnostics()$calibration` reports the level actually in use.
 Flags are per observation and are not corrected for multiplicity; the support
 requirement is a heuristic safeguard, not a formal error rate for growth.
 
 ## Fitting
 
-Columns are centered and scaled once and that preprocessing is frozen.
+The seeded split precedes centering and scaling, which use training rows only
+and remain frozen. Existing saved models keep their original preprocessing;
+loading cannot repair a legacy fit that included calibration rows.
 Prototypes are chosen by farthest-point sampling and refined; they are joined
 into a nearest-neighbor graph and laid out by stress majorization on graph
 path lengths (`geodesic = TRUE`) or Euclidean distances. Each prototype gets

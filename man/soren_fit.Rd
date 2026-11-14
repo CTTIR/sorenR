@@ -22,9 +22,10 @@ A \code{soren_model}.
 Fit a SOREN reference map
 }
 \details{
-Columns are centered and scaled once and the preprocessing is frozen.
+Columns are centered and scaled on the training portion only, after
+  the seeded calibration split, and this preprocessing is frozen.
   Up to a fifth of the rows (at most \code{calibration_size}) are held out to
-  calibrate novelty scores and are not used to place prototypes. Prototypes
+  calibrate novelty scores and do not fit preprocessing or prototypes. Prototypes
   are laid out by stress majorization on graph path lengths or Euclidean
   distances. The out-of-sample map is a normalized radial-basis average of
   prototype coordinates, optionally with frozen local linear maps.

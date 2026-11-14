@@ -43,8 +43,15 @@ The map is deterministic and consumes no random numbers; no
   \code{origin_displacement} is at most
   \code{(1 - new_weight) * origin_shift_max} plus \code{new_weight} times the
   distance between the new-prototype part of the map and the original map.
-  P-values are valid on average for observations exchangeable with the
-  calibration rows; they are not posterior probabilities.
+  For a newly fitted initial map, the score function is fitted independently
+  of calibration rows. Its split-conformal p-values are valid marginally for
+  observations exchangeable with those rows, conditional on the training fit.
+  Growth updates reuse calibration observations to constrain new prototypes
+  and recompute their scores: the resulting values are adaptive support ranks,
+  without the initial split-conformal validity guarantee. No p-value here is
+  a posterior probability. Existing serialized models retain their original
+  preprocessing; loading does not repair earlier fits that included calibration
+  rows in preprocessing.
 }
 \examples{
 x <- cbind(a = sin(1:60), b = cos(1:60))

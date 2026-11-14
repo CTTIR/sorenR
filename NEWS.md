@@ -1,5 +1,7 @@
 # sorenR 0.2.0
 
+* Fit centering and scaling only on training rows after the seeded calibration split, preventing held-out values from altering the initial score function. Existing serialized predictions remain unchanged. Clarify that adaptive growth reuses calibration data and subsequent support ranks do not retain the initial split-conformal guarantee.
+
 This version replaces the update mechanism and the layout. Models saved with
 0.1.0 cannot be loaded.
 

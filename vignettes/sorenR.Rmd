@@ -57,7 +57,7 @@ model <- soren_fit(x, n_components = 2L, control = control)
 model
 ```
 
-A fifth of the rows were held out to calibrate novelty scores:
+A fifth of the rows were excluded from preprocessing and prototype fitting to calibrate novelty scores:
 
 ```{r calibration}
 soren_diagnostics(model)$calibration
@@ -78,9 +78,14 @@ mapped$coordinates
 mapped$support
 ```
 
-P-values are valid on average for observations exchangeable with the calibration
-rows. They are not posterior probabilities, and a measurement shift will be
-flagged just like a new population.
+For this newly fitted initial map, the score function is independent of the
+calibration rows, giving marginal split-conformal validity for exchangeable new
+observations conditional on the training fit. Growth reuses calibration rows to
+constrain new prototypes and recalculate scores; subsequent values are adaptive
+support ranks without that guarantee. They are not posterior probabilities,
+and a measurement shift can be flagged like a new population. Legacy saved
+models retain their originally fitted preprocessing and are not repaired by
+loading them.
 
 ## Update with familiar data
 

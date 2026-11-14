@@ -4,9 +4,10 @@
 #' @param control Validated settings from \code{soren_control()}.
 #' @param row_ids Optional unique character observation identifiers.
 #' @return A \code{soren_model}.
-#' @details Columns are centered and scaled once and the preprocessing is frozen.
+#' @details Columns are centered and scaled on the training portion only, after
+#'   the seeded calibration split, and this preprocessing is frozen.
 #'   Up to a fifth of the rows (at most \code{calibration_size}) are held out to
-#'   calibrate novelty scores and are not used to place prototypes. Prototypes
+#'   calibrate novelty scores and do not fit preprocessing or prototypes. Prototypes
 #'   are laid out by stress majorization on graph path lengths or Euclidean
 #'   distances. The out-of-sample map is a normalized radial-basis average of
 #'   prototype coordinates, optionally with frozen local linear maps.
@@ -26,15 +27,19 @@ soren_fit <- function(x, n_components = 2L, control = soren_control(), row_ids =
       !identical(sort(names(control)), sort(names(formals(soren_control)))))
     stop("Use a complete soren_control() for control.")
   control <- do.call(soren_control, unclass(control))
-  ids <- .ids(row_ids, n); center <- colMeans(x); scale <- apply(x, 2L, stats::sd)
-  scale[scale == 0] <- 1
-  z <- .preprocess(x, center, scale)
+  ids <- .ids(row_ids, n)
   n_cal <- max(0, min(control$calibration_size, floor(n / 5), n - 2L))
   draw <- .local_seed(control$seed, function() {
     held <- if (n_cal) sample.int(n, n_cal) else integer()
     train <- setdiff(seq_len(n), held)
     list(held = held, train = train, first = sample.int(length(train), 1L))
   })
+  # Hold calibration rows out of the entire fitted score function, including
+  # preprocessing, not just the prototype-selection step.
+  fitting <- x[draw$train, , drop = FALSE]
+  center <- colMeans(fitting); scale <- apply(fitting, 2L, stats::sd)
+  scale[scale == 0] <- 1
+  z <- .preprocess(x, center, scale)
   train <- z[draw$train, , drop = FALSE]
   c <- train[.cover_indices(train, control$initial_prototypes, draw$first), , drop = FALSE]
   for (i in seq_len(3L)) c <- .move_prototypes(c, train, 0.5, 3)
