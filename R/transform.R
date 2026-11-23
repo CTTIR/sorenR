@@ -34,7 +34,8 @@
 #' @references
 #' Bates S, Candes E, Lei L, Romano Y, Sesia M (2023). Testing for outliers
 #' with conformal p-values. \emph{The Annals of Statistics}, 51(1), 149--178.
-#' \doi{10.1214/22-aos2244}. Marginal conformal p-value: Section 1.2, Eq. (3).
+#' \doi{10.1214/22-aos2244}. Marginal conformal p-value: Section 1.2, Eq. (3)
+#' (p. 3 of arXiv:2104.08279v3).
 #' @examples
 #' x <- cbind(a = sin(1:60), b = cos(1:60))
 #' model <- soren_fit(x, control = soren_control(iterations = 5L))
