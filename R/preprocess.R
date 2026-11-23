@@ -60,7 +60,11 @@
   if (weights_new) list(y = ans, new_weight = omega) else ans
 }
 
-# Conformal p-value of each score against sorted calibration scores.
+# Conformal p-value of each score against sorted calibration scores,
+# (1 + #{calibration scores >= score}) / (n + 1): Bates, Candes, Lei, Romano and
+# Sesia (2023), Ann. Statist. 51(1), 149-178, doi:10.1214/22-aos2244, Section 1.2,
+# Eq. (3) (p. 3 of arXiv:2104.08279v3). There small scores indicate outliers;
+# here large scores do, so the inequality is reversed.
 .pvalue <- function(score, calibration) {
   n <- length(calibration)
   if (!n) return(rep(1, length(score)))

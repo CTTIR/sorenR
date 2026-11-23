@@ -1,5 +1,8 @@
-# Weighted stress with weights 1 / target^2, normalised so that the value is the
-# mean squared relative distance error over prototype pairs.
+# Weighted stress with weights 1 / target^2, the choice of Gansner, Koren and
+# North (2005), Graph Drawing by Stress Majorization, LNCS 3383, 239-250,
+# doi:10.1007/978-3-540-31843-9_25, Section 2, Eq. (2) and the sentence after it.
+# It is normalised so that the value is the mean squared relative distance error
+# over prototype pairs.
 .stress_setup <- function(target) {
   w <- 1 / pmax(target, 1e-12)^2; w[target <= 0] <- 0; diag(w) <- 0
   lower <- lower.tri(target); total <- sum(w[lower] * target[lower]^2)
@@ -34,7 +37,10 @@
   y
 }
 
-# Stress majorization. Rows in `rows` stay inside a ball of `radius` around
+# Stress majorization with the Guttman transform V+ B(Y) Y, where
+# V+ = (V + 11'/m)^-1 - 11'/m: de Leeuw and Mair (2009), J. Stat. Softw. 31(3),
+# doi:10.18637/jss.v031.i03, Section 3, Eqs. (6), (8) and (14), pp. 4-5.
+# Rows in `rows` stay inside a ball of `radius` around
 # `center`; a step is a convex combination with a projected Guttman transform
 # and is taken only if stress does not increase, so every iterate is feasible.
 .layout <- function(y, target, iterations, center = NULL, radius = Inf, rows = integer()) {

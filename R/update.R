@@ -34,6 +34,10 @@
 #'   limit is refused before changing retained state or consuming random draws.
 #'   Newly generated row IDs beyond the 32-bit integer range use exact decimal
 #'   digits, avoiding rounded scientific notation that can merge distinct IDs.
+#' @references
+#' Vitter JS (1985). Random sampling with a reservoir. \emph{ACM Transactions
+#' on Mathematical Software}, 11(1), 37--57. \doi{10.1145/3147.3165}. Replay
+#' reservoir: Algorithm R, Section 2, pp. 39--40.
 #' @examples
 #' x <- cbind(a = sin(1:60), b = cos(1:60))
 #' model <- soren_fit(x, control = soren_control(iterations = 5L))

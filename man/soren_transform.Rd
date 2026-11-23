@@ -62,3 +62,8 @@ newdata <- cbind(a = sin(61:65), b = cos(61:65))
 soren_transform(model, newdata)
 soren_transform(model, newdata, diagnostics = TRUE)$support
 }
+\references{
+Bates S, Candes E, Lei L, Romano Y, Sesia M (2023). Testing for outliers
+with conformal p-values. \emph{The Annals of Statistics}, 51(1), 149--178.
+\doi{10.1214/22-aos2244}. Marginal conformal p-value: Section 1.2, Eq. (3).
+}

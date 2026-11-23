@@ -108,10 +108,15 @@ kernel t-SNE (Gisbrecht, Schulz and Hammer 2015,
 control points with local affine maps in LAMP (Joia et al. 2011,
 [doi:10.1109/tvcg.2011.220](https://doi.org/10.1109/tvcg.2011.220)), and
 landmark layouts on path lengths in landmark Isomap (de Silva and Tenenbaum
-2002). Stress majorization follows de Leeuw and Mair (2009,
-[doi:10.18637/jss.v031.i03](https://doi.org/10.18637/jss.v031.i03)) and conformal
-p-values for outlier testing follow Bates et al. (2023,
-[doi:10.1214/22-aos2244](https://doi.org/10.1214/22-aos2244)). What this package
+2002, [NeurIPS proceedings](https://papers.nips.cc/paper_files/paper/2002/hash/5d6646aad9bcc0be55b2c82f69750387-Abstract.html)).
+Stress majorization follows de Leeuw and Mair (2009,
+[doi:10.18637/jss.v031.i03](https://doi.org/10.18637/jss.v031.i03)), with the
+stress weights `1 / d^2` of Gansner, Koren and North (2005,
+[doi:10.1007/978-3-540-31843-9_25](https://doi.org/10.1007/978-3-540-31843-9_25)),
+and conformal p-values for outlier testing follow Bates et al. (2023,
+[doi:10.1214/22-aos2244](https://doi.org/10.1214/22-aos2244)). Half of the
+replay memory is a reservoir sample (Algorithm R in Vitter 1985,
+[doi:10.1145/3147.3165](https://doi.org/10.1145/3147.3165)). What this package
 adds is the update protocol and its displacement bound. No comparison with
 other methods on real data has been published.
 

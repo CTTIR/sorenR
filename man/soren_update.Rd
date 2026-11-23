@@ -59,3 +59,8 @@ batch <- cbind(a = sin(61:70), b = cos(61:70))
 updated <- soren_update(model, batch)
 soren_diagnostics(updated)$last_update$status
 }
+\references{
+Vitter JS (1985). Random sampling with a reservoir. \emph{ACM Transactions
+on Mathematical Software}, 11(1), 37--57. \doi{10.1145/3147.3165}. Replay
+reservoir: Algorithm R, Section 2, pp. 39--40.
+}

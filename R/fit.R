@@ -13,6 +13,15 @@
 #'   prototype coordinates, optionally with frozen local linear maps.
 #'   Whether the map preserves the structure of a particular data set has to be
 #'   checked, for example with \code{soren_neighborhood_audit()}.
+#' @references
+#' de Leeuw J, Mair P (2009). Multidimensional scaling using majorization:
+#' SMACOF in R. \emph{Journal of Statistical Software}, 31(3), 1--30.
+#' \doi{10.18637/jss.v031.i03}. Guttman transform: Section 3, Eq. (14), p. 5.
+#'
+#' Gansner ER, Koren Y, North S (2005). Graph drawing by stress majorization.
+#' \emph{Lecture Notes in Computer Science}, 3383, 239--250.
+#' \doi{10.1007/978-3-540-31843-9_25}. Stress weights \eqn{d^{-2}}: Section 2,
+#' Eq. (2).
 #' @examples
 #' x <- cbind(seq_len(30), sin(seq_len(30)))
 #' model <- soren_fit(x)

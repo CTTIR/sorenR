@@ -1,3 +1,7 @@
+# Half of the slots are a uniform reservoir sample, filled with Algorithm R as
+# given by Vitter (1985), ACM Trans. Math. Softw. 11(1), 37-57,
+# doi:10.1145/3147.3165, Section 2, pp. 39-40; the other half cover the data by
+# farthest-point selection.
 .memory <- function(old, x, ids, size, seed) {
   cap <- floor(size / 2)
   if (is.null(old)) old <- list(reservoir = x[FALSE, , drop = FALSE], reservoir_ids = character(),
