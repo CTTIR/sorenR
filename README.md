@@ -51,7 +51,9 @@ bound says nothing about how well the map represents the data.
 At fit, up to a fifth of the rows (at most `calibration_size`) are held out and
 excluded from both preprocessing and prototype fitting. A new observation's distance to its nearest
 prototype, in bandwidth units, is turned into a conformal p-value against those
-held-out scores. Observations at or below `novelty_alpha` are flagged. Where at
+held-out scores. Observations at or below `novelty_alpha` are flagged; with `n`
+held-out rows a p-value cannot fall below `1 / (n + 1)`, so when that exceeds
+`novelty_alpha` the level used is `1 / (n + 1)`. Where at
 least `growth_min_support` flagged observations lie close together, a prototype
 is appended at their mean; it is narrowed or dropped until new prototypes take
 at most `growth_intrusion` of the map weight on every calibration observation

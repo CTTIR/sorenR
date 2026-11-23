@@ -3,7 +3,29 @@
 #' @param newdata Optional observations for support diagnostics.
 #' @return A list with prototype and memory counts, layout stress, the
 #'   \code{certificate}, the \code{calibration} state, the last update record
-#'   and, if \code{newdata} is given, per-observation support diagnostics.
+#'   and, if \code{newdata} is given, per-observation support diagnostics:
+#'   \describe{
+#'     \item{\code{prototypes}, \code{prototypes_added}}{Codebook size, and
+#'       the number of prototypes appended by updates since the fit.}
+#'     \item{\code{retained_slots}, \code{retained_unique_ids}}{Replay slots
+#'       held in memory, and the number of distinct identifiers among them.}
+#'     \item{\code{seen}}{Observations passed to the fit and all updates.}
+#'     \item{\code{reservoir_population}}{Observations offered to the replay
+#'       reservoir, which excludes frozen and rolled back batches.}
+#'     \item{\code{edges}}{Edges of the prototype neighbour graph.}
+#'     \item{\code{stress}, \code{reference}}{Layout stress (\code{NA} for a
+#'       single prototype) and a description of the distances it is computed
+#'       against.}
+#'     \item{\code{certificate}}{\code{mode}, \code{radius},
+#'       \code{layout_scale}, \code{origin_shift_max}, \code{holds} and the
+#'       number of \code{updates}.}
+#'     \item{\code{calibration}}{Number \code{n} of held-out rows, the
+#'       p-value \code{resolution} \code{1 / (n + 1)}, \code{alpha}, the
+#'       \code{level} in use and \code{calibrated}.}
+#'     \item{\code{last_update}}{The most recent update record, or \code{NULL}.}
+#'     \item{\code{support}}{The support data frame of
+#'       \code{soren_transform()} for \code{newdata}, or \code{NULL}.}
+#'   }
 #' @details \code{certificate} reports the lifetime \code{radius}, the largest
 #'   distance of any prototype coordinate from its creation coordinate
 #'   (\code{origin_shift_max}) and whether the radius \code{holds}. While it

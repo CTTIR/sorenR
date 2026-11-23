@@ -5,6 +5,10 @@
 #' @param main Plot title.
 #' @return Print returns the model invisibly; summary returns diagnostics;
 #'   plot returns \code{NULL} invisibly.
+#' @details \code{plot()} draws the first two current map coordinates of the
+#'   retained replay slots, \code{soren_embedding(x)}, not every observation
+#'   seen. Use \code{soren_transform()} to map and plot other data, and
+#'   \code{soren_embedding(x, "prototypes")} for the prototype layout.
 #' @examples
 #' x <- cbind(a = sin(1:30), b = cos(1:30))
 #' model <- soren_fit(x, control = soren_control(iterations = 5L))

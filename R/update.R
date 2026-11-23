@@ -30,7 +30,7 @@
 #'   frozen or rollback. Because growth uses calibration rows to constrain the
 #'   proposed score function, subsequent support p-values are adaptive ranks,
 #'   without the initial split-conformal validity guarantee. Cumulative counters
-#'   support exact integers through `2^52`; an update that would exceed that
+#'   support exact integers through \code{2^52}; an update that would exceed that
 #'   limit is refused before changing retained state or consuming random draws.
 #'   Newly generated row IDs beyond the 32-bit integer range use exact decimal
 #'   digits, avoiding rounded scientific notation that can merge distinct IDs.
