@@ -29,3 +29,16 @@ test_that("frozen batches count as seen but not as reservoir population", {
   expect_identical(d$seen, 67L)
   expect_identical(d$reservoir_population, 60)
 })
+
+test_that("the flagging level is the larger of novelty_alpha and 1 / (n + 1)", {
+  x <- cbind(a = sin(1:250), b = cos(1:250))
+  control <- soren_control(iterations = 2L)
+  level <- function(rows, ctl = control) {
+    soren_diagnostics(soren_fit(x[rows, ], control = ctl))$calibration$level
+  }
+  wide <- soren_control(iterations = 2L, novelty_alpha = 0.1)
+  expect_identical(level(1:250, wide), 0.1)
+  # 99 rows hold out 19 calibration rows, 100 rows hold out 20.
+  expect_identical(level(1:99), 0)
+  expect_identical(level(1:100), 1 / 21)
+})

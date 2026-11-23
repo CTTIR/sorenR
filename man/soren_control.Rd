@@ -45,8 +45,11 @@ stay around the coordinate it had when it was created.}
 
 \item{tolerance}{Absolute numerical feasibility tolerance.}
 
-\item{novelty_alpha}{Conformal p-value threshold below which an observation
-is flagged as outside calibrated support.}
+\item{novelty_alpha}{Conformal p-value threshold at or below which an
+observation is flagged as outside calibrated support. With \code{n}
+held-out rows the level used is the larger of \code{novelty_alpha} and
+\code{1 / (n + 1)}; with fewer than twenty held-out rows nothing is
+flagged. \code{soren_diagnostics()} reports the level in use.}
 
 \item{growth_min_support}{Minimum number of mutually close flagged
 observations needed to propose a new prototype.}
