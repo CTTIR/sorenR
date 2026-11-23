@@ -15,7 +15,8 @@
   ...,
   xlab = "SOREN 1",
   ylab = "SOREN 2",
-  main = "Exploratory retained representation"
+  main = "Exploratory retained representation",
+  asp = 1
 )
 }
 \arguments{
@@ -26,6 +27,10 @@
 \item{xlab, ylab}{Axis labels for the plot.}
 
 \item{main}{Plot title.}
+
+\item{asp}{Aspect ratio passed to \code{plot()}. The default \code{1} draws
+both map axes on the same scale, so that distances in the plot are map
+distances; use \code{NA} for independent axis scales.}
 }
 \value{
 Print returns the model invisibly; summary returns diagnostics;
