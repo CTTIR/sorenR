@@ -1,4 +1,4 @@
-# Symmetric nearest-neighbor graph with Euclidean edge lengths (zero = no edge).
+# Symmetric nearest-neighbour graph with Euclidean edge lengths (zero = no edge).
 # Components are joined by their shortest connecting edge so that every pair
 # of prototypes has a finite path length.
 .graph <- function(c, k) {
@@ -44,7 +44,7 @@
 }
 
 # Frozen local linear maps: for each prototype the minimum-norm ridge solution
-# sending differences to graph neighbors onto their layout differences.
+# sending differences to graph neighbours onto their layout differences.
 .linear_maps <- function(c, y, graph, rows, old = NULL) {
   m <- nrow(c); p <- ncol(c); d <- ncol(y)
   out <- lapply(seq_len(d), function(k) {

@@ -28,7 +28,7 @@
 #'   Growth updates reuse calibration observations to constrain new prototypes
 #'   and recompute their scores: the resulting values are adaptive support ranks,
 #'   without the initial split-conformal validity guarantee. No p-value here is
-#'   a posterior probability. Existing serialized models retain their original
+#'   a posterior probability. Existing serialised models retain their original
 #'   preprocessing; loading does not repair earlier fits that included calibration
 #'   rows in preprocessing.
 #' @references

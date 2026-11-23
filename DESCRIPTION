@@ -2,8 +2,8 @@ Package: sorenR
 Title: Reference Maps with Certified Bounded Updates
 Version: 0.2.0
 Authors@R: person("R.", "Heller", email = "raban.heller@uni-ulm.de", role = c("aut", "cre", "cph"))
-Description: Fits self-organizing representations with evolving
-    neighborhoods (SOREN): a prototype codebook laid out by stress
+Description: Fits Self-Organizing Representations with Evolving
+    Neighborhoods (SOREN): a prototype codebook laid out by stress
     majorization, with a deterministic out-of-sample map in pure R. A fitted
     map can take new batches without existing prototypes moving in input
     space; new prototypes are appended only where observations fall outside
@@ -16,7 +16,7 @@ License: MIT + file LICENSE
 URL: https://github.com/CTTIR/sorenR
 BugReports: https://github.com/CTTIR/sorenR/issues
 Encoding: UTF-8
-Language: en-US
+Language: en-GB
 Depends: R (>= 4.1.0)
 Imports: stats, graphics, utils
 Suggests: testthat (>= 3.1.7), knitr, rmarkdown

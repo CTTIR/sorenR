@@ -2,7 +2,7 @@
 
 * Preserve exact cumulative counts and generated row identities beyond the 32-bit integer range. Updates that exceed the supported 2^52 counter limit fail before retained state or random draws change.
 
-* Fit centering and scaling only on training rows after the seeded calibration split, preventing held-out values from altering the initial score function. Existing serialized predictions remain unchanged. Clarify that adaptive growth reuses calibration data and subsequent support ranks do not retain the initial split-conformal guarantee.
+* Fit centring and scaling only on training rows after the seeded calibration split, preventing held-out values from altering the initial score function. Existing serialised predictions remain unchanged. Clarify that adaptive growth reuses calibration data and subsequent support ranks do not retain the initial split-conformal guarantee.
 
 This version replaces the update mechanism and the layout. Models saved with
 0.1.0 cannot be loaded.
@@ -25,7 +25,7 @@ This version replaces the update mechanism and the layout. Models saved with
   `local_linear` and `geodesic` were added. Defaults now use 64 prototypes.
 * Update records use the statuses `accepted`, `unchanged`, `frozen` and
   `rollback`.
-* Distances and mapping are vectorized; the neighborhood audit maps in blocks.
+* Distances and mapping are vectorised; the neighbourhood audit maps in blocks.
 * Validation errors name the part of the model that failed.
 
 # sorenR 0.1.0
@@ -41,10 +41,10 @@ This version replaces the update mechanism and the layout. Models saved with
 
 # sorenR 0.0.1
 
-* Show the logo in the new dimension reduction and visualization color
-  (deep teal #146554), shared with songR; `tools/branding/render.R` recolors
+* Show the logo in the new dimension reduction and visualisation colour
+  (deep teal #146554), shared with songR; `tools/branding/render.R` recolours
   the approved hexmakR master and keeps its name outlines.
-* Standardize the named v5 package logo across README, documentation pages
+* Standardise the named v5 package logo across README, documentation pages
   and available application headers, with matching light and dark artwork.
 * Initial experimental pure-R prototype graph implementation.
 * Frozen radial-basis transform and bounded replay/coverage memory.

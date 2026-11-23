@@ -2,7 +2,7 @@
 % Please edit documentation in R/neighborhood-audit.R
 \name{soren_neighborhood_audit}
 \alias{soren_neighborhood_audit}
-\title{Audit neighborhoods on supplied query and reference observations}
+\title{Audit neighbourhoods on supplied query and reference observations}
 \usage{
 soren_neighborhood_audit(
   object,
@@ -22,7 +22,7 @@ Zero rows are allowed.}
 \item{reference}{Nonempty dense finite numeric reference matrix with the exact
 training schema. The caller supplies and checks the provenance of both banks.}
 
-\item{k}{Positive integer number of neighbors, no greater than the eligible
+\item{k}{Positive integer number of neighbours, no greater than the eligible
 reference count for any query.}
 
 \item{exclude_reference}{\code{NULL} for no exclusions, or one integer-valued
@@ -45,14 +45,14 @@ A list with \code{per_query}, \code{summary}, \code{reference},
   \code{embedding_tied_query_count}, \code{input_tied_query_fraction},
   \code{embedding_tied_query_fraction} (boundary size greater than one).
   Empty queries return typed zero-row output, zero counts, and \code{NA_real_}
-  for the mean and fractions. No inputs, model, or neighbor matrices are retained.
+  for the mean and fractions. No inputs, model, or neighbour matrices are retained.
 }
 \description{
-Audit neighborhoods on supplied query and reference observations
+Audit neighbourhoods on supplied query and reference observations
 }
 \details{
 The reference metric is squared Euclidean distance after the fitted,
-  frozen per-feature centering and scaling. It is compared with squared
+  frozen per-feature centring and scaling. It is compared with squared
   Euclidean distance in the current embedding. Neither bank updates the model.
   Independent evaluation requires caller-supplied observations not used for
   fitting or tuning; this function cannot certify that independence. This is a

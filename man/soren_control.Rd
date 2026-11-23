@@ -32,7 +32,7 @@ Fewer are used when the training part has fewer distinct observations.}
 
 \item{memory_size}{Maximum retained replay observations (at least two).}
 
-\item{neighbors}{Nearest neighbors per prototype in the prototype graph.}
+\item{neighbors}{Nearest neighbours per prototype in the prototype graph.}
 
 \item{iterations}{Maximum stress majorization iterations per fit or update.}
 

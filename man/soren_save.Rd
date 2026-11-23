@@ -22,9 +22,9 @@ soren_load(file)
 Save or load a trusted model
 }
 \details{
-Serialized models include bounded standardized replay and prototypes.
-  These can contain sensitive information and are not anonymized. Validation
-  is not a security sandbox for untrusted R serialization.
+Serialised models include bounded standardised replay and prototypes.
+  These can contain sensitive information and are not anonymised. Validation
+  is not a security sandbox for untrusted R serialisation.
 }
 \examples{
 x <- cbind(a = sin(1:30), b = cos(1:30))

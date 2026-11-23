@@ -16,7 +16,7 @@ soren_transform(updated, x, reference = "origin")   # identical to y
 ## What an update guarantees
 
 The map is a weighted average over prototypes,
-`f(x) = sum_j w_j(x) * (y_j + A_j (x - c_j))`, with normalized radial-basis
+`f(x) = sum_j w_j(x) * (y_j + A_j (x - c_j))`, with normalised radial-basis
 weights `w_j`. An update
 
 * never changes an existing prototype `c_j`, its bandwidth or its local linear
@@ -71,16 +71,16 @@ requirement is a heuristic safeguard, not a formal error rate for growth.
 
 ## Fitting
 
-The seeded split precedes centering and scaling, which use training rows only
+The seeded split precedes centring and scaling, which use training rows only
 and remain frozen. Existing saved models keep their original preprocessing;
 loading cannot repair a legacy fit that included calibration rows.
 Prototypes are chosen by farthest-point sampling and refined; they are joined
-into a nearest-neighbor graph and laid out by stress majorization on graph
+into a nearest-neighbour graph and laid out by stress majorization on graph
 path lengths (`geodesic = TRUE`) or Euclidean distances. Each prototype gets
 its own bandwidth and, with `local_linear = TRUE`, a frozen local linear map.
 
 Check the result on your own data: `soren_neighborhood_audit(model, query,
-reference, k)` compares query-to-reference neighborhoods in the standardized
+reference, k)` compares query-to-reference neighbourhoods in the standardised
 input and in the embedding, with exact handling of ties.
 
 ## Limits
@@ -95,14 +95,14 @@ input and in the embedding, with exact handling of ties.
 * Far from all prototypes the local linear maps extrapolate linearly and
   should not be trusted; such observations are flagged as novel.
 * The model stores prototypes, held-out calibration rows and replay rows in
-  standardized form. They can contain sensitive information and are not
-  anonymized. `soren_load()` is for trusted local files only.
+  standardised form. They can contain sensitive information and are not
+  anonymised. `soren_load()` is for trusted local files only.
 * `soren_embedding()` returns retained replay slots or prototypes, not every
   historical observation.
 
 ## Related work
 
-The map form is not new: normalized radial-basis out-of-sample maps appear in
+The map form is not new: normalised radial-basis out-of-sample maps appear in
 kernel t-SNE (Gisbrecht, Schulz and Hammer 2015,
 [doi:10.1016/j.neucom.2013.11.045](https://doi.org/10.1016/j.neucom.2013.11.045)),
 control points with local affine maps in LAMP (Joia et al. 2011,

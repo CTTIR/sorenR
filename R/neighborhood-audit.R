@@ -1,11 +1,11 @@
-#' Audit neighborhoods on supplied query and reference observations
+#' Audit neighbourhoods on supplied query and reference observations
 #'
 #' @param object A fitted \code{soren_model}.
 #' @param query Dense finite numeric query matrix with the exact training schema.
 #'   Zero rows are allowed.
 #' @param reference Nonempty dense finite numeric reference matrix with the exact
 #'   training schema. The caller supplies and checks the provenance of both banks.
-#' @param k Positive integer number of neighbors, no greater than the eligible
+#' @param k Positive integer number of neighbours, no greater than the eligible
 #'   reference count for any query.
 #' @param exclude_reference \code{NULL} for no exclusions, or one integer-valued
 #'   index per query: zero excludes nothing; a positive index excludes that
@@ -24,9 +24,9 @@
 #'   \code{embedding_tied_query_count}, \code{input_tied_query_fraction},
 #'   \code{embedding_tied_query_fraction} (boundary size greater than one).
 #'   Empty queries return typed zero-row output, zero counts, and \code{NA_real_}
-#'   for the mean and fractions. No inputs, model, or neighbor matrices are retained.
+#'   for the mean and fractions. No inputs, model, or neighbour matrices are retained.
 #' @details The reference metric is squared Euclidean distance after the fitted,
-#'   frozen per-feature centering and scaling. It is compared with squared
+#'   frozen per-feature centring and scaling. It is compared with squared
 #'   Euclidean distance in the current embedding. Neither bank updates the model.
 #'   Independent evaluation requires caller-supplied observations not used for
 #'   fitting or tuning; this function cannot certify that independence. This is a

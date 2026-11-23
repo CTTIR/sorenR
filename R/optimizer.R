@@ -53,7 +53,7 @@
     d <- sqrt(.dist2(y, y)); ratio <- s$w * s$target / d; ratio[d == 0] <- 0
     b <- -ratio; diag(b) <- rowSums(ratio)
     proposal <- vinv %*% (b %*% y)
-    # Stress ignores translation: keep the constrained rows (or all rows) centered
+    # Stress ignores translation: keep the constrained rows (or all rows) centred
     # where they are, so that no part of the radius is spent on a rigid shift.
     fix <- if (length(rows)) rows else seq_len(m)
     proposal <- proposal + rep(colMeans(y[fix, , drop = FALSE]) -

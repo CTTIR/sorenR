@@ -4,7 +4,7 @@
 #' @param initial_prototypes Codebook size requested at fit, at most the maximum.
 #'   Fewer are used when the training part has fewer distinct observations.
 #' @param memory_size Maximum retained replay observations (at least two).
-#' @param neighbors Nearest neighbors per prototype in the prototype graph.
+#' @param neighbors Nearest neighbours per prototype in the prototype graph.
 #' @param iterations Maximum stress majorization iterations per fit or update.
 #' @param stability_mode One of \code{"fixed"}, \code{"frozen"} or
 #'   \code{"unrestricted"}. See Details.

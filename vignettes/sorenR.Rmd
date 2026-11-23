@@ -135,10 +135,10 @@ identical(soren_transform(grown, x, reference = "origin"),
           soren_transform(model, x))
 ```
 
-## Audit neighborhoods
+## Audit neighbourhoods
 
 The bound is about stability, not about quality. To check how well the map keeps
-neighborhoods, compare query-to-reference neighbors in the standardized input
+neighbourhoods, compare query-to-reference neighbours in the standardised input
 and in the embedding on data that was not used for fitting.
 
 ```{r neighborhood-audit}
@@ -165,4 +165,4 @@ soren_diagnostics(grown)$retained_slots
 historical observation; use `soren_transform()` for data stored separately.
 Save with `soren_save(grown, "model.rds")` and reload with
 `soren_load("model.rds")`. Only load trusted files. The model stores prototypes
-and standardized calibration and replay rows, which are not anonymized.
+and standardised calibration and replay rows, which are not anonymised.
