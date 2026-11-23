@@ -117,6 +117,19 @@ record[c("status", "flagged", "growth", "anchor_displacement_max")]
 soren_diagnostics(grown)$certificate
 ```
 
+Mapped with the updated model, the new population lies beside the fitted rows,
+which keep their places:
+
+```{r map-plot, fig.width = 6, fig.height = 4.5, fig.alt = "Scatter plot of the two map coordinates: the fitted rows form a grey double loop and the new population a separate teal band to its right."}
+y_fitted <- soren_transform(grown, x)
+y_far <- soren_transform(grown, far)
+plot(rbind(y_fitted, y_far), asp = 1, pch = 19, cex = 0.5,
+     col = rep(c("grey55", "#146554"), c(nrow(x), nrow(far))),
+     xlab = "SOREN 1", ylab = "SOREN 2")
+legend("bottom", c("Fitted rows", "New population"), horiz = TRUE,
+       col = c("grey55", "#146554"), pch = 19, bty = "n")
+```
+
 While the certificate holds, an observation with share `w` of its weight on
 added prototypes is at most `(1 - w) * origin_shift_max` away from where the
 original map put it, plus `w` times the distance to the new part of the map.
