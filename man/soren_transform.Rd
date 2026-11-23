@@ -23,7 +23,9 @@ the map as it was originally fitted.}
 }
 \value{
 A coordinate matrix, or a list with coordinates and a data frame of
-  support diagnostics.
+  support diagnostics. Row names of \code{newdata} are kept on the
+  coordinates; the data frame keeps them only when they are unique and not
+  missing, and otherwise uses row numbers in the order of \code{newdata}.
 }
 \description{
 Map observations with a fitted reference map

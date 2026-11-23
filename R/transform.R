@@ -5,7 +5,9 @@
 #' @param reference \code{"current"} for the present map, or \code{"origin"} for
 #'   the map as it was originally fitted.
 #' @return A coordinate matrix, or a list with coordinates and a data frame of
-#'   support diagnostics.
+#'   support diagnostics. Row names of \code{newdata} are kept on the
+#'   coordinates; the data frame keeps them only when they are unique and not
+#'   missing, and otherwise uses row numbers in the order of \code{newdata}.
 #' @details The map is deterministic and consumes no random numbers; no
 #'   preprocessing is refitted. An updated model still contains everything
 #'   needed to evaluate the originally fitted map, so \code{reference = "origin"}
@@ -55,5 +57,12 @@ soren_transform <- function(object, newdata, diagnostics = FALSE,
   p <- .pvalue(score, object$calibration$score)
   list(current = now$y, origin = then, table = data.frame(score = score, p_value = p,
     novel = p <= .level(object), new_weight = now$new_weight,
-    origin_displacement = sqrt(rowSums((now$y - then)^2)), row.names = rownames(z)))
+    origin_displacement = sqrt(rowSums((now$y - then)^2)), row.names = .table_rows(z)))
+}
+
+# Matrix row names may repeat or be missing, data frame row names may not:
+# keep them only when they are valid data frame row names.
+.table_rows <- function(x) {
+  rn <- rownames(x)
+  if (is.null(rn) || anyNA(rn) || anyDuplicated(rn)) NULL else rn
 }
