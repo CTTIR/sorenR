@@ -77,7 +77,9 @@ soren_control <- function(max_prototypes = 256L, initial_prototypes = 64L,
   if (existed) old <- get(".Random.seed", envir = .GlobalEnv, inherits = FALSE)
   kind <- RNGkind()
   on.exit({
-    do.call(RNGkind, as.list(kind))
+    # Restoring the caller's own choice must not repeat R's warning about the
+    # pre-3.6.0 "Rounding" sampler for every fit or update.
+    suppressWarnings(do.call(RNGkind, as.list(kind)))
     if (existed) assign(".Random.seed", old, envir = .GlobalEnv)
     else if (exists(".Random.seed", envir = .GlobalEnv, inherits = FALSE))
       rm(".Random.seed", envir = .GlobalEnv)
