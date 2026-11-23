@@ -1,6 +1,7 @@
 # Weighted stress with weights 1 / target^2, the choice of Gansner, Koren and
 # North (2005), Graph Drawing by Stress Majorization, LNCS 3383, 239-250,
-# doi:10.1007/978-3-540-31843-9_25, Section 2, Eq. (2) and the sentence after it.
+# doi:10.1007/978-3-540-31843-9_25, Section 2, Eq. (2) and the sentence after
+# it.
 # It is normalised so that the value is the mean squared relative distance error
 # over prototype pairs.
 .stress_setup <- function(target) {

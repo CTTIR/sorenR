@@ -61,7 +61,8 @@ soren_transform <- function(object, newdata, diagnostics = FALSE,
   p <- .pvalue(score, object$calibration$score)
   list(current = now$y, origin = then, table = data.frame(score = score, p_value = p,
     novel = p <= .level(object), new_weight = now$new_weight,
-    origin_displacement = sqrt(rowSums((now$y - then)^2)), row.names = .table_rows(z)))
+    origin_displacement = sqrt(rowSums((now$y - then)^2)),
+    row.names = .table_rows(z)))
 }
 
 # Matrix row names may repeat or be missing, data frame row names may not:

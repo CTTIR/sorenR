@@ -1,4 +1,5 @@
-# Symmetric nearest-neighbour graph with Euclidean edge lengths (zero = no edge).
+# Symmetric nearest-neighbour graph with Euclidean edge lengths (zero means no
+# edge).
 # Components are joined by their shortest connecting edge so that every pair
 # of prototypes has a finite path length.
 .graph <- function(c, k) {

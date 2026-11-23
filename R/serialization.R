@@ -3,9 +3,10 @@
 #' @param file Local file path. Only load files from trusted sources.
 #' @return \code{soren_save} invisibly returns the file path; \code{soren_load}
 #'   returns a validated model.
-#' @details Serialised models include bounded standardised replay and prototypes.
-#'   These can contain sensitive information and are not anonymised. Validation
-#'   is not a security sandbox for untrusted R serialisation.
+#' @details Serialised models include bounded standardised replay and
+#'   prototypes. These can contain sensitive information and are not
+#'   anonymised. Validation is not a security sandbox for untrusted R
+#'   serialisation.
 #' @examples
 #' x <- cbind(a = sin(1:30), b = cos(1:30))
 #' model <- soren_fit(x, control = soren_control(iterations = 5L))

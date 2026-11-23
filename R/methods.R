@@ -33,9 +33,11 @@ summary.soren_model <- function(object, ...) soren_diagnostics(object)
 #' @rdname print.soren_model
 #' @export
 plot.soren_model <- function(x, ..., xlab = "SOREN 1", ylab = "SOREN 2",
-                             main = "Exploratory retained representation", asp = 1) {
+                             main = "Exploratory retained representation",
+                             asp = 1) {
   z <- soren_embedding(x)
   if (ncol(z) < 2L) stop("Plot requires at least two output dimensions.")
-  graphics::plot(z[, 1L], z[, 2L], xlab = xlab, ylab = ylab, main = main, asp = asp, ...)
+  graphics::plot(z[, 1L], z[, 2L], xlab = xlab, ylab = ylab, main = main,
+                 asp = asp, ...)
   invisible(NULL)
 }

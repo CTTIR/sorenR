@@ -28,9 +28,11 @@ test_that("the plot uses equal axis scales unless asked otherwise", {
   path <- tempfile(fileext = ".pdf")
   grDevices::pdf(path, width = 7, height = 4)
   device <- grDevices::dev.cur()
-  on.exit({ grDevices::dev.off(device); unlink(path) }, add = TRUE)
+  on.exit(grDevices::dev.off(device), add = TRUE)
+  on.exit(unlink(path), add = TRUE)
   units_per_inch <- function() {
-    usr <- graphics::par("usr"); pin <- graphics::par("pin")
+    usr <- graphics::par("usr")
+    pin <- graphics::par("pin")
     c(diff(usr[1:2]) / pin[1], diff(usr[3:4]) / pin[2])
   }
   plot(model)

@@ -30,10 +30,11 @@
 #'   frozen or rollback. Because growth uses calibration rows to constrain the
 #'   proposed score function, subsequent support p-values are adaptive ranks,
 #'   without the initial split-conformal validity guarantee. Cumulative counters
-#'   support exact integers through \code{2^52}; an update that would exceed that
-#'   limit is refused before changing retained state or consuming random draws.
-#'   Newly generated row IDs beyond the 32-bit integer range use exact decimal
-#'   digits, avoiding rounded scientific notation that can merge distinct IDs.
+#'   support exact integers through \code{2^52}; an update that would exceed
+#'   that limit is refused before changing retained state or consuming random
+#'   draws. Newly generated row IDs beyond the 32-bit integer range use exact
+#'   decimal digits, avoiding rounded scientific notation that can merge
+#'   distinct IDs.
 #' @references
 #' Vitter JS (1985). Random sampling with a reservoir. \emph{ACM Transactions
 #' on Mathematical Software}, 11(1), 37--57. \doi{10.1145/3147.3165}. Replay
