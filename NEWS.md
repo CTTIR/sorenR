@@ -1,9 +1,5 @@
 # sorenR 0.2.0
 
-* Preserve exact cumulative counts and generated row identities beyond the 32-bit integer range. Updates that exceed the supported 2^52 counter limit fail before retained state or random draws change.
-
-* Fit centring and scaling only on training rows after the seeded calibration split, preventing held-out values from altering the initial score function. Existing serialised predictions remain unchanged. Clarify that adaptive growth reuses calibration data and subsequent support ranks do not retain the initial split-conformal guarantee.
-
 This version replaces the update mechanism and the layout. Models saved with
 0.1.0 cannot be loaded.
 
@@ -27,6 +23,27 @@ This version replaces the update mechanism and the layout. Models saved with
   `rollback`.
 * Distances and mapping are vectorised; the neighbourhood audit maps in blocks.
 * Validation errors name the part of the model that failed.
+* Preserve exact cumulative counts and generated row identities beyond the
+  32-bit integer range. Updates that exceed the supported 2^52 counter limit
+  fail before retained state or random draws change.
+* Fit centring and scaling only on training rows after the seeded calibration
+  split, preventing held-out values from altering the initial score function.
+  Existing serialised predictions remain unchanged. Clarify that adaptive growth
+  reuses calibration data and subsequent support ranks do not retain the
+  initial split-conformal guarantee.
+* `soren_transform(diagnostics = TRUE)` and `soren_diagnostics(newdata = )` no
+  longer fail when `newdata` has repeated or missing row names; the support
+  data frame then uses row numbers.
+* `plot()` draws both map axes on the same scale by default (`asp = 1`), so
+  that plotted distances are map distances; `asp = NA` gives independent
+  scales.
+* Fitting and updating restore a caller's legacy `"Rounding"` sample kind
+  without repeating the warning that R gives for it.
+* Documentation lists every field returned by `soren_diagnostics()`, states
+  what `plot()` draws and which flagging level applies with few calibration
+  rows, and cites the sources of the conformal p-value, the stress weights,
+  the Guttman transform and the replay reservoir. The vignette shows the
+  updated map. Prose uses British English.
 
 # sorenR 0.1.0
 
