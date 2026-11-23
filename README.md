@@ -126,7 +126,9 @@ Install the development version with `remotes::install_github("CTTIR/sorenR")`.
 Only base and recommended R packages are needed at run time; no network access
 is required by the package, its examples or its tests.
 
-Read the [getting-started vignette](vignettes/sorenR.Rmd) for a complete example.
+Read the getting-started vignette, `vignette("sorenR", package = "sorenR")`
+([source](https://github.com/CTTIR/sorenR/blob/main/vignettes/sorenR.Rmd)), for a
+complete example.
 
 ## Branding
 
